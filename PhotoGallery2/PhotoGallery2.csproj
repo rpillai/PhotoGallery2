@@ -202,13 +202,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201405090002255_Album-PlaceTaken-Added.cs" />
-    <Compile Include="Migrations\201405090002255_Album-PlaceTaken-Added.Designer.cs">
-      <DependentUpon>201405090002255_Album-PlaceTaken-Added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201405090140298_PhotoContentLenghtAdded.cs" />
-    <Compile Include="Migrations\201405090140298_PhotoContentLenghtAdded.Designer.cs">
-      <DependentUpon>201405090140298_PhotoContentLenghtAdded.cs</DependentUpon>
+    <Compile Include="Migrations\201405100517371_InitialCreate.cs" />
+    <Compile Include="Migrations\201405100517371_InitialCreate.Designer.cs">
+      <DependentUpon>201405100517371_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -303,11 +299,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201405090002255_Album-PlaceTaken-Added.resx">
-      <DependentUpon>201405090002255_Album-PlaceTaken-Added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201405090140298_PhotoContentLenghtAdded.resx">
-      <DependentUpon>201405090140298_PhotoContentLenghtAdded.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201405100517371_InitialCreate.resx">
+      <DependentUpon>201405100517371_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,24 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Net.Mime;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using PhotoGallery2.Models;
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace PhotoGallery2.Migrations
 {
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PhotoDBContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<PhotoGallery2.Models.PhotoDBContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            ContextKey = "PhotoGallery2.Models.PhotoDBContext";
         }
 
-        protected override void Seed(PhotoDBContext context)
+        protected override void Seed(PhotoGallery2.Models.PhotoDBContext context)
         {
             //  This method will be called after migrating to the latest version.
 
@@ -68,12 +69,12 @@ namespace PhotoGallery2.Migrations
                     FirstName = "Ramesh",
                     LastName = "Pillai",
                     UserName = "rpillai",
-                    Id =  Guid.NewGuid().ToString()
+                    Id = Guid.NewGuid().ToString()
                 };
 
                 var success = userManager.Create(newUser, "Password1");
 
-                if(role !=null 
+                if (role != null
                     && role.Succeeded)
                     userManager.AddToRole(newUser.Id, "Administrator");
             }
@@ -81,7 +82,8 @@ namespace PhotoGallery2.Migrations
             if (roleManager.RoleExists("testRole") == false)
                 role = roleManager.Create(new IdentityRole("testRole"));
 
-            
+
         }
     }
+
 }

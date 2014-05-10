@@ -7,13 +7,13 @@ namespace PhotoGallery2.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.1-21010")]
-    public sealed partial class PhotoContentLenghtAdded : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(PhotoContentLenghtAdded));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201405090140298_PhotoContentLenghtAdded"; }
+            get { return "201405100517371_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source
