@@ -1,6 +1,78 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@model IEnumerable<PhotoGallery2.Models.Photo>
+@{
+    ViewBag.Title = "Photos";
 }
 
-<h2>Index</h2>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-4">
+            <div class="media">
+                <div class="media-heading">
+                    <h4>@item.Title</h4>
+                </div>
+                <div class="media-object pull-left">
+
+                    <img src="@Url.Content(item.PhotoPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+
+                </div>
+                <br />
+                <div class="media-body">
+                    <p class="text-info pull-left">@item.Description</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@Html.ActionLink("Back to Gallery","Index","Album")
+
+@*<table class="table-striped">
+        <tr>
+            <th>
+                <span>
+                    @Html.DisplayNameFor(model => model.Title)
+                </span>
+            </th>
+            <th>
+                <span>
+                    @Html.DisplayNameFor(model => model.FileName)
+                </span>
+            </th>
+            <th>
+                <span>
+                    @Html.DisplayNameFor(model => model.Description)
+                </span>
+            </th>
+            <th>
+                <span>
+                    @Html.DisplayNameFor(model => model.Place)
+                </span>
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Place)
+                </td>
+                <button class="btn btn-primary">
+                    <span class="glyphicon glyphicon-thumbs-up" style="vertical-align: middle"></span> Like
+                </button>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PhotoID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.PhotoID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PhotoID })
+                </td>
+            </tr>
+        }
+    </table>*@
 

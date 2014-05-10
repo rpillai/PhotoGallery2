@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace PhotoGallery2.Models
 {
@@ -59,5 +62,56 @@ namespace PhotoGallery2.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class SelectUserRolesViewModel
+    {
+        public List<SelectRoleEditorViewModel> Roles { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserName { get; set; }
+
+        public SelectUserRolesViewModel()
+        {
+            Roles = new List<SelectRoleEditorViewModel>();
+        }
+
+        public SelectUserRolesViewModel(ApplicationUser user)
+            : this()
+        {
+            this.FirstName = user.FirstName;
+            this.LastName = user.LastName;
+            this.UserName = user.UserName;
+
+            var context = new PhotoDBContext();
+            var allRoles = context.Roles;
+
+            foreach (var role in allRoles)
+            {
+                var rvm = new SelectRoleEditorViewModel(role);
+                Roles.Add(rvm);
+            }
+
+            foreach (var userRole in user.Roles)
+            {
+                var checkUserRole = this.Roles.Find(r => r.RoleName == userRole.Role.Name);
+                checkUserRole.Selected = true;
+            }
+        }
+
+    }
+
+    public class SelectRoleEditorViewModel
+    {
+        public SelectRoleEditorViewModel() { }
+
+        public SelectRoleEditorViewModel(IdentityRole role)
+        {
+            this.RoleName = role.Name;
+        }
+
+        public bool Selected { get; set; }
+
+        public string RoleName { get; set; }
     }
 }

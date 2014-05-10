@@ -1,6 +1,8 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Web;
 
 using System.Data.Entity;
@@ -13,14 +15,20 @@ namespace PhotoGallery2.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int PhotoID { get; set; }
 
         public string Title { get; set; }
         public string FileName { get; set; }
         public string Description { get; set; }
-        public DateTime DateTaken { get; set; }
+        
         public string Place { get; set; }
+        public string PhotoPath { get; set; }
+
+        public string ContentType { get; set; }
+        public int ContentLength { get; set; }
 
         public int AlbumID { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; } 
     }
 }

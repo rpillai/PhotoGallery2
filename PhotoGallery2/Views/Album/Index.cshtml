@@ -1,0 +1,33 @@
+﻿@model IEnumerable<PhotoGallery2.Models.AlbumViewModel>
+@{
+    ViewBag.Title = "Index";
+
+    if (User.IsInRole("Administrator"))
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+}
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-4">
+            <div class="media">
+                <div class="media-heading">
+                    <h4>@item.AlbumName</h4>
+                </div>
+                <div class="media-object pull-left">
+                    <a href="~/Photo?AlbumID=@item.AlbumID">
+                        <img src="@Url.Content(item.KeythumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+                    </a>
+                </div>
+                <br />
+                <div class="media-body">
+                    <p class="text-info pull-left"><span class="badge">@item.PhotoCount</span> @item.Description</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
