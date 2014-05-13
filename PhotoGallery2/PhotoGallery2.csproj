@@ -290,12 +290,9 @@
     <Content Include="Views\Shared\EditorTemplates\SelectRoleEditorViewModel.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Photo\Upload.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\Photo\ListPhotos.cshtml" />
     <Content Include="Views\Album\ListAlbums.cshtml" />
     <Content Include="Views\Photo\Edit.cshtml" />
-=======
->>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

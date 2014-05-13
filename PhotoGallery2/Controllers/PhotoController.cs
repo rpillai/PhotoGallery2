@@ -18,7 +18,7 @@ namespace PhotoGallery2.Controllers
     public class PhotoController : Controller
     {
         readonly PhotoDBContext context = new PhotoDBContext();
-        
+
         public ActionResult Index(int AlbumID)
         {
             if (AlbumID != 0)
@@ -31,7 +31,7 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("Index", "Album");
         }
 
-<<<<<<< HEAD
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,7 +39,7 @@ namespace PhotoGallery2.Controllers
         /// <returns></returns>
         public ActionResult Edit(int photoID)
         {
-            var photo = context.Photos.Find(new { PhotoID = photoID});
+            var photo = context.Photos.Find(new { PhotoID = photoID });
 
             if (photo != null)
             {
@@ -49,24 +49,20 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("ListPhotos");
 
         }
-=======
->>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
 
         public ActionResult Upload()
         {
-            ViewBag.Albums = new SelectList(context.Albums.ToList(),"AlbumID","Name");
+            ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name");
             return View();
         }
 
-<<<<<<< HEAD
+
         public ActionResult ListPhotos()
         {
             var photos = context.Photos.ToList();
             return View(photos);
         }
 
-=======
->>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
         [HttpPost]
         [ValidateAntiForgeryToken()]
         [Authorize(Roles = "Administrator")]
@@ -76,8 +72,8 @@ namespace PhotoGallery2.Controllers
             var albumID = Convert.ToInt32(formData["Albums"]);
 
             albumDirectory += albumID + "/";
-            
-            for(var i=0;i<Request.Files.Count;i++)
+
+            for (var i = 0; i < Request.Files.Count; i++)
             {
                 var fileBase = Request.Files[i];
 
@@ -90,30 +86,27 @@ namespace PhotoGallery2.Controllers
                         ContentType = fileBase.ContentType,
                         FileName = fileBase.FileName,
                         ContentLength = fileBase.ContentLength,
-                        PhotoPath =  albumID + "\\" + fileBase.FileName
+                        PhotoPath = albumID + "\\" + fileBase.FileName
                     };
 
                     saveAndCreateThumbnail(albumDirectory, albumID, fileBase);
 
                     context.Photos.Add(photo);
-                    context.SaveChanges();    
+                    context.SaveChanges();
                 }
             }
-            
-<<<<<<< HEAD
+
             return RedirectToAction("Index", new { AlbumID = albumID });
-=======
-            return RedirectToAction("Index");
->>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
+
         }
 
-        private void saveAndCreateThumbnail(string albumDirectory,int albumID, HttpPostedFileBase fileBase)
+        private void saveAndCreateThumbnail(string albumDirectory, int albumID, HttpPostedFileBase fileBase)
         {
             var albumThumbnailDirectory = Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT) + albumID + "\\";
 
             if (checkAndCreateDirectory(albumDirectory))
             {
-                fileBase.SaveAs(albumDirectory + "/" + fileBase.FileName);    
+                fileBase.SaveAs(albumDirectory + "/" + fileBase.FileName);
             }
 
 
@@ -142,7 +135,8 @@ namespace PhotoGallery2.Controllers
                     dirInfo.Create();
                     created = true;
                 }
-                catch (Exception){
+                catch (Exception)
+                {
                 }
             }
 
@@ -151,7 +145,7 @@ namespace PhotoGallery2.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if(disposing)
+            if (disposing)
                 context.Dispose();
 
             base.Dispose(disposing);
