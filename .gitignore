@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/PhotoGallery2/Photos
+/PhotoGallery2/App_Data
