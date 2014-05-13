@@ -31,11 +31,34 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("Index", "Album");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="albumID"></param>
+        /// <returns></returns>
+        public ActionResult Edit(int photoID)
+        {
+            var photo = context.Photos.Find(new { PhotoID = photoID});
+
+            if (photo != null)
+            {
+                return View(photo);
+            }
+
+            return RedirectToAction("ListPhotos");
+
+        }
 
         public ActionResult Upload()
         {
             ViewBag.Albums = new SelectList(context.Albums.ToList(),"AlbumID","Name");
             return View();
+        }
+
+        public ActionResult ListPhotos()
+        {
+            var photos = context.Photos.ToList();
+            return View(photos);
         }
 
         [HttpPost]
@@ -71,7 +94,7 @@ namespace PhotoGallery2.Controllers
                 }
             }
             
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { AlbumID = albumID });
         }
 
         private void saveAndCreateThumbnail(string albumDirectory,int albumID, HttpPostedFileBase fileBase)

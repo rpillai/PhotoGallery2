@@ -35,6 +35,14 @@ namespace PhotoGallery2.Controllers
             return View(model);
         }
 
+
+        public ActionResult ListAlbums()
+        {
+            var albums = db.Albums.ToList();
+            return View(albums);
+        }
+
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -49,7 +57,6 @@ namespace PhotoGallery2.Controllers
             return View(album);
         }
 
-        
         public ActionResult Create()
         {
             return View();
