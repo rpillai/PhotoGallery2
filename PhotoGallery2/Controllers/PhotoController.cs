@@ -31,6 +31,7 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("Index", "Album");
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// 
         /// </summary>
@@ -48,6 +49,8 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("ListPhotos");
 
         }
+=======
+>>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
 
         public ActionResult Upload()
         {
@@ -55,12 +58,15 @@ namespace PhotoGallery2.Controllers
             return View();
         }
 
+<<<<<<< HEAD
         public ActionResult ListPhotos()
         {
             var photos = context.Photos.ToList();
             return View(photos);
         }
 
+=======
+>>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
         [HttpPost]
         [ValidateAntiForgeryToken()]
         [Authorize(Roles = "Administrator")]
@@ -94,7 +100,11 @@ namespace PhotoGallery2.Controllers
                 }
             }
             
+<<<<<<< HEAD
             return RedirectToAction("Index", new { AlbumID = albumID });
+=======
+            return RedirectToAction("Index");
+>>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
         }
 
         private void saveAndCreateThumbnail(string albumDirectory,int albumID, HttpPostedFileBase fileBase)

@@ -35,6 +35,7 @@ namespace PhotoGallery2.Controllers
             return View(model);
         }
 
+<<<<<<< HEAD
 
         public ActionResult ListAlbums()
         {
@@ -43,6 +44,8 @@ namespace PhotoGallery2.Controllers
         }
 
 
+=======
+>>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -57,6 +60,10 @@ namespace PhotoGallery2.Controllers
             return View(album);
         }
 
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 47fdbd099660bff83ad7c3586c55ede34306fe6d
         public ActionResult Create()
         {
             return View();
