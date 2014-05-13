@@ -1,0 +1,22 @@
+﻿@model PhotoGallery2.Models.RoleViewModel
+           @{
+               ViewBag.Title = "Create Role";
+           }
+<div>
+    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("Create", "Role", FormMethod.Post))
+    {
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            <div class="form-control">
+                @Html.LabelFor(item => item.Name)
+            </div>
+            <div class="form-control">
+                @Html.EditorFor(item => item.Name)
+            </div>
+            <div class="form-control">
+               <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,19 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div>
+    <h2>Delete</h2>
+</div>
+<div>
+    <h3>Are you sure want to delete this Role  '@Model.Name'?</h3>
+    @using (Html.BeginForm("Delete", "Role", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Delete" />
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

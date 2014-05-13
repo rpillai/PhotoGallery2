@@ -1,0 +1,18 @@
+﻿@model List<PhotoGallery2.Models.ApplicationUser>
+@{
+    ViewBag.Title = "List of Users";
+}
+<h1>Available Users</h1>
+@foreach (var user in Model)
+{
+    <div class="row">
+        <div class="col-md-1">@user.UserName</div>
+        <div class="col-md-1">@user.FirstName</div>
+        <div class="col-md-1">@user.LastName</div>
+        <div class="col-md-1">
+            @Html.ActionLink("Add Roles", "UserRoles", "Role", new { userId = user.UserName }, null)
+        </div>
+    </div>
+}
+
+
