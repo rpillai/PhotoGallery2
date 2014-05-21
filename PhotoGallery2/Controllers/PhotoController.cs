@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Security.AccessControl;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using PhotoGallery2.Models;
@@ -23,14 +25,20 @@ namespace PhotoGallery2.Controllers
         {
             if (AlbumID != 0)
             {
-                var photos = context.Photos.Where(p => p.AlbumID == AlbumID);
-                photos.ForEach(x => x.PhotoPath = @"~//Photos//thumbs//" + x.PhotoPath);
+                var photos = context.Photos.Where(p => p.AlbumID == AlbumID)
+                                           .Select(x => new PhotoViewModel
+                                           {
+                                               PhotoID = x.PhotoID,
+                                               Title = x.Title,
+                                               Description = x.Description,
+                                               ThumbnailPath = ServerConstants.PHOTO_THUMBS_ROOT + x.PhotoPath,
+                                               PhotoPath = ServerConstants.PHOTO_ROOT + x.PhotoPath
+                                           });
                 return View(photos);
             }
 
             return RedirectToAction("Index", "Album");
         }
-
 
         /// <summary>
         /// 
@@ -50,12 +58,29 @@ namespace PhotoGallery2.Controllers
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Photo photo)
+        {
+            if (ModelState.IsValid)
+            {
+                var p = context.Photos.Find(photo.PhotoID);
+
+                p.Title = photo.Title;
+                p.Description = photo.Description;
+
+                //context.Entry(p).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+
+            return RedirectToAction("ListPhotos");
+        }
+
         public ActionResult Upload()
         {
             ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name");
             return View();
         }
-
 
         public ActionResult ListPhotos()
         {
@@ -98,6 +123,23 @@ namespace PhotoGallery2.Controllers
 
             return RedirectToAction("Index", new { AlbumID = albumID });
 
+        }
+
+
+        public JsonResult GetPhotosForSlideShow(int albumID)
+        {
+            var path = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT);
+            var thumPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_THUMBS_ROOT);
+
+            var photos = context.Photos.Where(p => p.AlbumID == albumID)
+                                           .Select(x => new 
+                                           {
+                                               title = x.Title,
+                                               href =  path + x.PhotoPath,
+                                               thumbnail = thumPath + x.PhotoPath,
+                                               type = x.ContentType
+                                           });
+            return Json(photos, "data", JsonRequestBehavior.AllowGet);
         }
 
         private void saveAndCreateThumbnail(string albumDirectory, int albumID, HttpPostedFileBase fileBase)
@@ -143,6 +185,7 @@ namespace PhotoGallery2.Controllers
             return created;
         }
 
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

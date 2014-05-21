@@ -1,8 +1,18 @@
-﻿@model IEnumerable<PhotoGallery2.Models.Photo>
+﻿@model IEnumerable<PhotoGallery2.Models.PhotoViewModel>
 @{
     ViewBag.Title = "Photos";
 }
-
+@Styles.Render("~/Content/bootstrap-image-gallery")
+<input type="hidden" id="albumID" value="@Request.QueryString["AlbumID"]" />
+<div class="row">
+    <div class="divider col-lg-offset-1 pull-right">
+        <button id="launch" class="btn btn-default pull-left">
+            <i class="glyphicon glyphicon-camera"></i>
+            Start Slide Show
+        </button>
+    </div>
+</div>
+<br />
 <div class="row">
     @foreach (var item in Model)
     {
@@ -11,10 +21,8 @@
                 <div class="media-heading">
                     <h4>@item.Title</h4>
                 </div>
-                <div class="media-object pull-left">
-
-                    <img src="@Url.Content(item.PhotoPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
-
+                <div id="links" class="media-object pull-left">
+                    <img src="@Url.Content(item.ThumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
                 </div>
                 <br />
                 <div class="media-body">
@@ -24,55 +32,65 @@
         </div>
     }
 </div>
-@Html.ActionLink("Back to Gallery","Index","Album")
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    @*<a class="close">×</a>*@
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body"></div>
 
-@*<table class="table-striped">
-        <tr>
-            <th>
-                <span>
-                    @Html.DisplayNameFor(model => model.Title)
-                </span>
-            </th>
-            <th>
-                <span>
-                    @Html.DisplayNameFor(model => model.FileName)
-                </span>
-            </th>
-            <th>
-                <span>
-                    @Html.DisplayNameFor(model => model.Description)
-                </span>
-            </th>
-            <th>
-                <span>
-                    @Html.DisplayNameFor(model => model.Place)
-                </span>
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FileName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Place)
-                </td>
-                <button class="btn btn-primary">
-                    <span class="glyphicon glyphicon-thumbs-up" style="vertical-align: middle"></span> Like
-                </button>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.PhotoID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.PhotoID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.PhotoID })
-                </td>
-            </tr>
-        }
-    </table>*@
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left prev">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button type="button" class="btn btn-primary next">
+                        Next
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to Gallery", "Index", "Album", new { @class = "btn-link" })
+</div>
 
+@section Scripts{
+    @Scripts.Render("~/bundles/boostrap-image-gallery")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            document.getElementById('launch').onclick = function (event) {
+                //event.preventDefault();
+                var albumID = document.getElementById("albumID").value;
+                $.ajax({
+                    url: '/Photo/GetPhotosForSlideShow?albumID=' + albumID,
+                    datatype: 'json'
+                }).done(function (result) {
+                    var obj = $.parseJSON(result);
+                    var options = {
+                        indicatorContainer: 'ol',
+                        activeIndicatorContainer: 'active',
+                        thumbnailProperty: 'thumbnail',
+                        thumbnailIndicators: true
+                    };
+                    blueimp.Gallery(obj, options);
+                });
+
+
+            };
+        });
+
+    </script>
+}

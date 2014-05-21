@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using PhotoGallery2.Attributes;
 
 namespace PhotoGallery2
 {
@@ -7,7 +8,7 @@ namespace PhotoGallery2
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new CustomHandleErrorAttribute());
         }
     }
 }

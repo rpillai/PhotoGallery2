@@ -23,9 +23,22 @@ namespace PhotoGallery2
                         "~/Scripts/bootstrap.js",
                         "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/boostrap-image-gallery")
+                                        .Include("~/Scripts/blueimp-gallery/blueimp-gallery.js",
+                                                 "~/Scripts/blueimp-gallery/blueimp-gallery-fullscreen.js",
+                                                 "~/Scripts/blueimp-gallery/blueimp-gallery-indicator.js",
+                                                 "~/Scripts/blueimp-gallery/blueimp-helper.js",
+                                                 "~/Scripts/blueimp-gallery/jquery.blueimp-gallery.js",
+                                                 "~/Scripts/blueimp-gallery/bootstrap-image-gallery.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/bootstrap.css",
                         "~/Content/site.css"));
+            bundles.Add(
+                new StyleBundle("~/Content/bootstrap-image-gallery")
+                               .Include("~/Content/bootstrap-image-gallery.css",
+                                        "~/Content/blueimp-gallery.css",
+                                        "~/Content/blueimp-gallery-indicator.css"));
         }
     }
 }
