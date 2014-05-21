@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Resource Not found";
+}
+<div class="row text-left">
+    <div class="col-lg-5">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Oops.Something unexpected happened.
+            </div>
+            <div class="panel-body">
+                The requested URL @ViewBag.ErrorMessage' not found in the server.
+            </div>
+            <div class="panel-footer text-right">
+                @Html.ActionLink("Back to Home", "Index", "Home")
+            </div>
+        </div>
+    </div>
+</div>
+
