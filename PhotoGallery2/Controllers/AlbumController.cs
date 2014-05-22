@@ -28,7 +28,7 @@ namespace PhotoGallery2.Controllers
                 Description = album.Description,
                 PhotoCount = album.Photos.Count,
                 KeythumbnailPath = album.Photos.FirstOrDefault() != null ? ServerConstants.PHOTO_THUMBS_ROOT + album.Photos.FirstOrDefault().PhotoPath
-                                                                            : "holder.js?160x160",
+                                                                    : "holder.js?160x160",
                 DateTaken = album.CreateDate
 
             });

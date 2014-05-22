@@ -12,7 +12,7 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using PhotoGallery2.Models;
-using WebGrease.Css.Extensions;
+
 
 namespace PhotoGallery2.Controllers
 {
@@ -50,6 +50,7 @@ namespace PhotoGallery2.Controllers
         /// <returns></returns>
         public ActionResult Edit(int photoID)
         {
+
             var photo = context.Photos.Find(photoID);
 
             if (photo != null)
@@ -81,9 +82,12 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Upload(int? albumID)
         {
+
             ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name",albumID);
             return View();
         }
+
+
 
         public ActionResult ListPhotos()
         {
