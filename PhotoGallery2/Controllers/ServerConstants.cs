@@ -9,7 +9,7 @@ namespace PhotoGallery2.Controllers
 {
     public class ServerConstants
     {
-        public const string PHOTO_ROOT =  @"~\Photos\";
-        public const string PHOTO_THUMBS_ROOT = @"~\Photos\thumbs\";
+        public const string PHOTO_ROOT =  @"..\Photos\";
+        public const string PHOTO_THUMBS_ROOT = @"..\Photos\thumbs\";
     }
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PhotoGallery2.Models.Album>
+﻿@using System.Web.UI.HtmlControls
+@model IEnumerable<PhotoGallery2.Models.Album>
 
 @{
     ViewBag.Title = "ListAlbums";
@@ -27,26 +28,32 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PlaceTaken)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AlbumID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AlbumID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AlbumID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlaceTaken)
+            </td>
+            <td>
+                @Html.ActionLink(" Details", "Details", new { id = item.AlbumID }, new { @class = "glyphicon glyphicon-ok btn btn-primary" })
+
+                @Html.ActionLink(" Edit", "Edit", new { id = item.AlbumID }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
+
+                @Html.ActionLink(" Delete", "Delete", new { id = item.AlbumID }, new { @class = "glyphicon glyphicon-trash btn btn-primary" })
+
+                @Html.ActionLink(" Upload", "Upload", "Photo", new { albumID = item.AlbumID}, htmlAttributes: new { @class = "glyphicon glyphicon-upload btn btn-primary" })
+
+            </td>
+        </tr>
+    }
 
 </table>

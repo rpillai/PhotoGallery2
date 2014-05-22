@@ -23,6 +23,9 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Index(int AlbumID)
         {
+            var thumPath = ServerConstants.PHOTO_THUMBS_ROOT;
+            var path = ServerConstants.PHOTO_ROOT;
+
             if (AlbumID != 0)
             {
                 var photos = context.Photos.Where(p => p.AlbumID == AlbumID)
@@ -31,8 +34,8 @@ namespace PhotoGallery2.Controllers
                                                PhotoID = x.PhotoID,
                                                Title = x.Title,
                                                Description = x.Description,
-                                               ThumbnailPath = ServerConstants.PHOTO_THUMBS_ROOT + x.PhotoPath,
-                                               PhotoPath = ServerConstants.PHOTO_ROOT + x.PhotoPath
+                                               ThumbnailPath = thumPath + x.PhotoPath,
+                                               PhotoPath =  path + x.PhotoPath
                                            });
                 return View(photos);
             }
@@ -76,9 +79,9 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("ListPhotos");
         }
 
-        public ActionResult Upload()
+        public ActionResult Upload(int? albumID)
         {
-            ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name");
+            ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name",albumID);
             return View();
         }
 
@@ -128,8 +131,8 @@ namespace PhotoGallery2.Controllers
 
         public JsonResult GetPhotosForSlideShow(int albumID)
         {
-            var path = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT);
-            var thumPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_THUMBS_ROOT);
+            var path = ServerConstants.PHOTO_ROOT;
+            var thumPath = ServerConstants.PHOTO_THUMBS_ROOT;
 
             var photos = context.Photos.Where(p => p.AlbumID == albumID)
                                            .Select(x => new 

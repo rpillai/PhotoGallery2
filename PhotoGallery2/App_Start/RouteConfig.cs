@@ -13,12 +13,7 @@ namespace PhotoGallery2
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.RouteExistingFiles = true;
-
-            routes.MapRoute("Photo",
-                            "Photos/{albumid}/{image}",
-                            new { controller = "Photo", action = "Index" }
-                );
+            //routes.RouteExistingFiles = true;
 
             routes.MapRoute(
                 name: "Default",

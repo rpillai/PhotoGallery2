@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -18,7 +19,7 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Index()
         {
-            var albums = db.Albums;
+            var albums = db.Albums.Where( a=> a.Photos.Count > 0) ;
 
             IEnumerable<AlbumViewModel> model = albums.Select(album => new AlbumViewModel
             {
@@ -26,7 +27,7 @@ namespace PhotoGallery2.Controllers
                 AlbumName = album.Name,
                 Description = album.Description,
                 PhotoCount = album.Photos.Count,
-                KeythumbnailPath = album.Photos.FirstOrDefault() != null ? @"~/Photos/thumbs/" + album.Photos.FirstOrDefault().PhotoPath
+                KeythumbnailPath = album.Photos.FirstOrDefault() != null ? ServerConstants.PHOTO_THUMBS_ROOT + album.Photos.FirstOrDefault().PhotoPath
                                                                             : "holder.js?160x160",
                 DateTaken = album.CreateDate
 
@@ -73,7 +74,7 @@ namespace PhotoGallery2.Controllers
             {
                 db.Albums.Add(album);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("ListAlbums");
             }
 
             return View(album);
@@ -130,10 +131,23 @@ namespace PhotoGallery2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Album album = db.Albums.Find(id);
+            var album = db.Albums.Find(id);
+
+            deleteAlbumDirectory(Server.MapPath(ServerConstants.PHOTO_ROOT + "/" + id));
+
+            deleteAlbumDirectory(Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT + "/" + id));
+            
             db.Albums.Remove(album);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
+            return RedirectToAction("ListAlbums");
+        }
+
+        private void deleteAlbumDirectory(string albumPath)
+        {
+            var dirInfo = new DirectoryInfo(albumPath);
+            if (dirInfo.Exists)
+                dirInfo.Delete(true);
         }
 
         protected override void Dispose(bool disposing)
