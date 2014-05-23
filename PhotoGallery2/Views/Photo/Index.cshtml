@@ -80,9 +80,9 @@
             document.getElementById('launch').onclick = function (event) {
                 //event.preventDefault();
                 var albumID = document.getElementById("albumID").value;
+                
                 $.ajax({
-                    url: '/Photo/GetPhotosForSlideShow?albumID=' + albumID,
-                    datatype: 'json'
+                    url: '@Url.Action("GetPhotosForSlideShow","Photo", new { albumID =  Request.QueryString["AlbumID"] })',
                 }).done(function (result) {
                     var obj = $.parseJSON(result);
                     var options = {
@@ -90,6 +90,7 @@
                         activeIndicatorContainer: 'active',
                         thumbnailProperty: 'thumbnail',
                         thumbnailIndicators: true
+                        
                     };
                     blueimp.Gallery(obj, options);
                 });
