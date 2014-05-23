@@ -27,26 +27,20 @@ namespace PhotoGallery2.Migrations
             {
                 new Album
                 {
-                    Name = "Test Album1",
-                    Description = "Description for the Test Album One",
+                    Name = "Animals",
+                    Description = "List of Animals",
                     CreateDate = DateTime.Now
                 },
                 new Album
                 {
-                    Name = "Test Album2",
-                    Description = "Description for the Test Album Two",
+                    Name = "Flowers",
+                    Description = "List of Flowers",
                     CreateDate = DateTime.Now
                 },
                 new Album
                 {
-                    Name = "Test Album3",
-                    Description = "Description for the Test Album Three",
-                    CreateDate = DateTime.Now
-                },
-                new Album
-                {
-                    Name = "Test Album4",
-                    Description = "Description for the Test Album Four",
+                    Name = "Places",
+                    Description = "List of Places",
                     CreateDate = DateTime.Now
                 }
             };

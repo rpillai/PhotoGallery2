@@ -118,7 +118,7 @@ namespace PhotoGallery2.Controllers
                         ContentType = fileBase.ContentType,
                         FileName = fileBase.FileName,
                         ContentLength = fileBase.ContentLength,
-                        PhotoPath = albumID + "\\" + fileBase.FileName
+                        PhotoPath = albumID + "//" + fileBase.FileName
                     };
 
                     saveAndCreateThumbnail(albumDirectory, albumID, fileBase);
@@ -135,8 +135,8 @@ namespace PhotoGallery2.Controllers
 
         public JsonResult GetPhotosForSlideShow(int albumID)
         {
-            var path = ServerConstants.PHOTO_ROOT;
-            var thumPath = ServerConstants.PHOTO_THUMBS_ROOT;
+            var path = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT);
+            var thumPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_THUMBS_ROOT);
 
             var photos = context.Photos.Where(p => p.AlbumID == albumID)
                                            .Select(x => new 
@@ -146,6 +146,12 @@ namespace PhotoGallery2.Controllers
                                                thumbnail = thumPath + x.PhotoPath,
                                                type = x.ContentType
                                            });
+
+            foreach (var p in photos)
+            {
+                Console.WriteLine(p.thumbnail + "     " +  p.href);
+            }
+
             return Json(photos, "data", JsonRequestBehavior.AllowGet);
         }
 
@@ -155,7 +161,7 @@ namespace PhotoGallery2.Controllers
 
             if (checkAndCreateDirectory(albumDirectory))
             {
-                fileBase.SaveAs(albumDirectory + "/" + fileBase.FileName);
+                fileBase.SaveAs(albumDirectory + "\\" + fileBase.FileName);
             }
 
 

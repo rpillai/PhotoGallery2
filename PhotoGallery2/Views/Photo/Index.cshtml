@@ -75,26 +75,26 @@
 
 @section Scripts{
     @Scripts.Render("~/bundles/boostrap-image-gallery")
+    @Scripts.Render("~/bundles/jquery.blueimp-gallery")
+    @Scripts.Render("~/bundles/bootstrap-image-gallery")
+
     <script type="text/javascript">
         $(document).ready(function () {
             document.getElementById('launch').onclick = function (event) {
-                //event.preventDefault();
+                event.preventDefault();
                 var albumID = document.getElementById("albumID").value;
                 $.ajax({
-                    url: '/Photo/GetPhotosForSlideShow?albumID=' + albumID,
+                    url: '@Url.Action("GetPhotosForSlideShow","Photo", new { albumID = Request.QueryString["AlbumID"]})',
                     datatype: 'json'
                 }).done(function (result) {
                     var obj = $.parseJSON(result);
                     var options = {
                         indicatorContainer: 'ol',
                         activeIndicatorContainer: 'active',
-                        thumbnailProperty: 'thumbnail',
                         thumbnailIndicators: true
                     };
                     blueimp.Gallery(obj, options);
                 });
-
-
             };
         });
 
