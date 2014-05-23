@@ -12,7 +12,7 @@
     </div>
 
     <div class="col-lg-offset-1 pull-right">
-        <button id="launch" class="btn btn-default pull-left">
+        <button id="launch" class="btn btn-primary pull-left">
             <i class="glyphicon glyphicon-camera"></i>
             Start Slide Show
         </button>
@@ -28,7 +28,9 @@
                     <h4>@item.Title</h4>
                 </div>
                 <div id="links" class="media-object pull-left">
-                    <img src="@Url.Content(item.ThumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+                    <a href="~/Photo/Details?PhotoID=@item.PhotoID">
+                        <img src="@Url.Content(item.ThumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+                    </a>
                 </div>
                 <br />
                 <div class="media-body">
@@ -41,7 +43,7 @@
 <br />
 
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
-    <div class="slides"></div>
+    <div class="slides img-rounded"></div>
     <h3 class="title"></h3>
     <a class="prev">‹</a>
     <a class="next">›</a>
@@ -55,10 +57,9 @@
                     <button type="button" class="close" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"></h4>
                 </div>
-                <div class="modal-body"></div>
-
+                <div class="modal-body img-rounded"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left prev">
+                    <button type="button" class="btn btn-primary pull-left prev">
                         <i class="glyphicon glyphicon-chevron-left"></i>
                         Previous
                     </button>

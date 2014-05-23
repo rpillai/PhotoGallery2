@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-nav navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -48,12 +48,11 @@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
-    </div>
-    <div class="container body-content">
+    </nav>
+    <div class="container">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Ishaan Photo Gallery</p>
+        <footer class="modal-footer">
+            <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Ishaan Photo Gallery</p>
         </footer>
     </div>
 

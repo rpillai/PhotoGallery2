@@ -3,12 +3,11 @@
 @{
     ViewBag.Title = "Manage Account";
 }
-
-<h2>@ViewBag.Title.</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
-    <div class="col-md-12">
+    @*<h2>@ViewBag.Title.</h2>*@
+    <p class="text-success">@ViewBag.StatusMessage</p>
+
+    <div class="col-md-8">
         @if (ViewBag.HasLocalPassword)
         {
             @Html.Partial("_ChangePasswordPartial")
@@ -17,12 +16,13 @@
         {
             @Html.Partial("_SetPasswordPartial")
         }
-
-        <section id="externalLogins">
-            @Html.Action("RemoveAccountList")
-            @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
-        </section>
     </div>
+    <div class="col-md-4"></div>
+    <section id="externalLogins">
+        @Html.Action("RemoveAccountList")
+        @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
+    </section>
+</div>
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

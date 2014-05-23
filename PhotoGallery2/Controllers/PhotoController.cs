@@ -43,6 +43,20 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("Index", "Album");
         }
 
+        public ActionResult ListPhotos()
+        {
+            var photos = context.Photos.ToList();
+            return View(photos);
+        }
+
+
+        public ActionResult Details(int? photoID)
+        {
+            var photo = context.Photos.Find(photoID);
+            photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
+            return View(photo);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -87,13 +101,7 @@ namespace PhotoGallery2.Controllers
             return View();
         }
 
-
-
-        public ActionResult ListPhotos()
-        {
-            var photos = context.Photos.ToList();
-            return View(photos);
-        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken()]
