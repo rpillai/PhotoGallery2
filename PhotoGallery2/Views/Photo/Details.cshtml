@@ -1,0 +1,26 @@
+﻿@model PhotoGallery2.Models.Photo
+
+@{
+    ViewBag.Title = "Details";
+}
+<div class="container">
+    <div class="media">
+        <div class="media-heading">
+            <p>@Model.Title</p>
+        </div>
+        <div class="media-body">
+            <div class="media-object">
+                <img src="@Model.PhotoPath" alt="@Model.Title" class="img-rounded" />
+            </div>
+            <div class="media-list divider">
+                <p>@Model.Description</p>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.AlbumID)
+
+</div>
+<p>
+    @Html.ActionLink("Back to Photos", "Index",new {AlbumID = Model.AlbumID})
+</p>

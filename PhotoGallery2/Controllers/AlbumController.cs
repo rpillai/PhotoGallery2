@@ -12,11 +12,12 @@ using WebGrease.Css.Extensions;
 
 namespace PhotoGallery2.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     public class AlbumController : Controller
     {
         private readonly PhotoDBContext db = new PhotoDBContext();
 
+        [Authorize]
         public ActionResult Index()
         {
             var albums = db.Albums.Where( a=> a.Photos.Count > 0) ;
