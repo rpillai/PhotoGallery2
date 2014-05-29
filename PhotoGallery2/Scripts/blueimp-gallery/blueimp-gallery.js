@@ -1007,6 +1007,7 @@
                 }]);
             }
             $(element).addClass(this.options.slideContentClass);
+            $(element).addClass('img-rounded');
             return element;
         },
 

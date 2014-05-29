@@ -36,7 +36,7 @@ namespace PhotoGallery2.Controllers
                                                Description = x.Description,
                                                ThumbnailPath = thumPath + x.PhotoPath,
                                                PhotoPath =  path + x.PhotoPath
-                                           });
+                                           }).OrderBy(p=> p.PhotoID);
                 return View(photos);
             }
 
@@ -45,10 +45,9 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult ListPhotos()
         {
-            var photos = context.Photos.ToList();
+            var photos = context.Photos.ToList().OrderBy( p=> p.PhotoID);
             return View(photos);
         }
-
 
         public ActionResult Details(int? photoID)
         {
@@ -101,8 +100,6 @@ namespace PhotoGallery2.Controllers
             return View();
         }
 
-        
-
         [HttpPost]
         [ValidateAntiForgeryToken()]
         [Authorize(Roles = "Administrator")]
@@ -140,7 +137,6 @@ namespace PhotoGallery2.Controllers
 
         }
 
-
         public JsonResult GetPhotosForSlideShow(int albumID)
         {
             var path = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT);
@@ -161,6 +157,20 @@ namespace PhotoGallery2.Controllers
             }
 
             return Json(photos, "data", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetNext(int albumID, int photoID, string flag)
+        {
+            var photo =
+                context.Photos.AsEnumerable().OrderBy(p => p.PhotoID)
+                .Where(p => p.AlbumID == albumID && p.PhotoID > photoID).Take(1).FirstOrDefault();
+
+            if (photo == null)
+                photo = context.Photos.Where(p => p.AlbumID == albumID).OrderBy(p => p.PhotoID).First();
+                                                
+            photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
+
+            return View("Details", photo);
         }
 
         private void saveAndCreateThumbnail(string albumDirectory, int albumID, HttpPostedFileBase fileBase)
@@ -216,3 +226,4 @@ namespace PhotoGallery2.Controllers
         }
     }
 }
+

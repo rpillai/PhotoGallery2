@@ -193,6 +193,10 @@
     <Compile Include="Migrations\201405282132020_Initial-Create.Designer.cs">
       <DependentUpon>201405282132020_Initial-Create.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201406011236568_Comment table changes.cs" />
+    <Compile Include="Migrations\201406011236568_Comment table changes.Designer.cs">
+      <DependentUpon>201406011236568_Comment table changes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Album.cs" />
@@ -254,6 +258,9 @@
     <None Include="Properties\PublishProfiles\ishaanphotos - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ishaanphotos - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\ishaanphotos2.pubxml" />
+    <Content Include="Scripts\blueimp-gallery\blueimp-gallery.min.js.map">
+      <DependentUpon>blueimp-gallery.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
@@ -264,6 +271,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\PhotoGallery\StartSlideShow.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -313,10 +321,12 @@
     <Content Include="Views\Photo\Edit.cshtml" />
     <Content Include="Views\Shared\FileNotFound.cshtml" />
     <Content Include="Views\Photo\Details.cshtml" />
+    <Content Include="Views\Comment\_CommentListPartial.cshtml" />
+    <Content Include="Views\Comment\_UpdateComment.cshtml" />
+    <Content Include="Views\Photo\_SlideShow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Comment\" />
     <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
@@ -326,6 +336,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201405282132020_Initial-Create.resx">
       <DependentUpon>201405282132020_Initial-Create.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406011236568_Comment table changes.resx">
+      <DependentUpon>201406011236568_Comment table changes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

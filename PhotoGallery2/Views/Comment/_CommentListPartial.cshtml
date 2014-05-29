@@ -1,0 +1,14 @@
+﻿@model List<PhotoGallery2.Models.Comment>
+<h4>Comments....</h4>
+@foreach (var item in Model)
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <p class="small label label-info"> <small>@item.User.FirstName</small></p>
+        </div>
+        <div class="col-sm-9">
+            <p class="small">@item.Description</p>
+        </div>
+    </div>
+}
+

@@ -32,13 +32,13 @@
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("Manage Users", "Index", "Account")</li>
                                 <li>@Html.ActionLink("Manage Roles", "Index", "Role")</li>
-                                
+
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage Photos<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Photo","ListPhotos","Photo")</li>
+                                <li>@Html.ActionLink("Photo", "ListPhotos", "Photo")</li>
                                 <li>@Html.ActionLink("Album", "ListAlbums", "Album")</li>
                                 <li>@Html.ActionLink("Upload", "Upload", "Photo")</li>
                             </ul>
@@ -55,6 +55,7 @@
             <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Photo Gallery</p>
         </footer>
     </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
