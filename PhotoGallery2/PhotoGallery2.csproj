@@ -180,6 +180,7 @@
     <Compile Include="Attributes\CustomHandleErrorAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlbumController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhotoController.cs" />
@@ -188,9 +189,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201405100517371_InitialCreate.cs" />
-    <Compile Include="Migrations\201405100517371_InitialCreate.Designer.cs">
-      <DependentUpon>201405100517371_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201405282132020_Initial-Create.cs" />
+    <Compile Include="Migrations\201405282132020_Initial-Create.Designer.cs">
+      <DependentUpon>201405282132020_Initial-Create.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -252,6 +253,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\ishaanphotos - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ishaanphotos - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\ishaanphotos2.pubxml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
@@ -273,6 +275,7 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -313,6 +316,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Comment\" />
     <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
@@ -320,8 +324,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201405100517371_InitialCreate.resx">
-      <DependentUpon>201405100517371_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201405282132020_Initial-Create.resx">
+      <DependentUpon>201405282132020_Initial-Create.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -16,6 +16,7 @@ namespace PhotoGallery2.Models
     {
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Album> Albums { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         
         public PhotoDBContext() 
             : base("PhotoDBContext")

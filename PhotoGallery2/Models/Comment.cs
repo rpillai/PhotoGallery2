@@ -16,6 +16,10 @@ namespace PhotoGallery2.Models
         public int CommentID { get; set; }
 
         public string Comments { get; set; }
+        
+        public string UserID { get; set; }
         public int PhotoID { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
     }
 }

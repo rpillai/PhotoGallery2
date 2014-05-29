@@ -4,23 +4,35 @@
     ViewBag.Title = "Details";
 }
 <div class="container">
-    <div class="media">
-        <div class="media-heading">
-            <p>@Model.Title</p>
-        </div>
-        <div class="media-body">
-            <div class="media-object">
-                <img src="@Model.PhotoPath" alt="@Model.Title" class="img-rounded" />
+    <div class="col-lg-6">
+        <div class="media">
+            <div class="media-heading">
+                <p>@Model.Title</p>
+                <p class="text-info">The title of the Photo.</p>
             </div>
-            <div class="media-list divider">
-                <p>@Model.Description</p>
+            <img src="@Model.PhotoPath" alt="@Model.Title" class="img-rounded img-responsive media-object" />
+            <br />
+            <div class="media-body">
+                <p>The photo description goes here.</p>
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.AlbumID)
+    </div>
+    <div class="col-lg-6">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <textarea id="txtComment" rows="5" cols="10" class="form-control col-lg-6"></textarea>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-primary form-control">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        Comment
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-
-    @Html.HiddenFor(model => model.AlbumID)
-
 </div>
 <p>
-    @Html.ActionLink("Back to Photos", "Index",new {AlbumID = Model.AlbumID})
+    @Html.ActionLink("Back to Photos", "Index", new { AlbumID = Model.AlbumID })
 </p>
