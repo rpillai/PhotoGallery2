@@ -1,0 +1,19 @@
+﻿@model PhotoGallery2.Models.UpdateComment
+
+<div class="form-horizontal">
+    @using (Html.BeginForm("UpdateComment", "Comment", null, FormMethod.Post, new { id = "updateCommentForm" }))
+    {
+        <p class="small">
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 5, cols = 60, autofocus = true, required = true, placeholder = "Write comment" })
+        </p>
+
+        @Html.HiddenFor(m => m.PhotoID)
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit">
+            <span class="glyphicon glyphicon-comment"></span>
+            Comment
+        </button>
+    }
+</div>

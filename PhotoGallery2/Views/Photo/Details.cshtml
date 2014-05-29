@@ -1,26 +1,79 @@
 ﻿@model PhotoGallery2.Models.Photo
-
 @{
     ViewBag.Title = "Details";
 }
-<div class="container">
-    <div class="media">
-        <div class="media-heading">
-            <p>@Model.Title</p>
+<div class="container center-block">
+    <div class="row">
+        <div class="col-md-8">
+            <button id="launch" class="btn btn-sm btn-primary pull-right">
+                <i class="glyphicon glyphicon-camera"></i>
+                Start Slide Show
+            </button>
+            <h4>@Model.Title</h4>
+            <img src="@Model.PhotoPath" alt="@Model.Title" class="media-object img-responsive pull-left img-rounded img-responsive" />
+            <p class="text-muted"><small>@Model.Description</small></p>
+            <ul class="pager">
+                <li class="">
+                    <a href="~/Photo/GetNext?AlbumID=@Model.AlbumID&PhotoID=@Model.PhotoID&flag=P"><span class="glyphicon glyphicon-arrow-left"></span> Prev </a>
+                </li>
+                <li class="">
+                    <a href="~/Photo?AlbumID=@Model.AlbumID"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
+                </li>
+                <li class="">
+                    <a href="~/Photo/GetNext?AlbumID=@Model.AlbumID&PhotoID=@Model.PhotoID&flag=N"> Next <span class="glyphicon glyphicon-arrow-right"></span></a>
+                </li>
+            </ul>
         </div>
-        <div class="media-body">
-            <div class="media-object">
-                <img src="@Model.PhotoPath" alt="@Model.Title" class="img-rounded" />
+        <div class="col-md-4">
+            
+            <div id="commentsList">
+                @{
+                    Html.RenderAction("ListComments", "Comment", new { PhotoID = Model.PhotoID });
+                }
             </div>
-            <div class="media-list divider">
-                <p>@Model.Description</p>
+            <br/>
+            <div id="submit">
+                @{
+                    Html.RenderAction("UpdateComment", "Comment", new { PhotoID = Model.PhotoID });
+                }
             </div>
         </div>
     </div>
-
-    @Html.HiddenFor(model => model.AlbumID)
-
 </div>
-<p>
-    @Html.ActionLink("Back to Photos", "Index",new {AlbumID = Model.AlbumID})
-</p>
+<input type="hidden" id="albumID" value="@Model.AlbumID" />
+<br />
+<div class="col-md-8">
+    
+</div>
+<br />
+@Html.Partial("_SlideShow")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/boostrap-image-gallery")
+    @Scripts.Render("~/bundles/jquery.blueimp-gallery")
+    @Scripts.Render("~/bundles/bootstrap-image-gallery")
+    <script type="text/javascript" src="~/Scripts/PhotoGallery/StartSlideShow.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#btnSubmit').click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    data: $('#updateCommentForm').serialize(),
+                    url: '@Url.Action("UpdateComment", "Comment")',
+                    success: function (result) {
+                        $('#Description').value = "";
+                        $('#commentsList').load(
+                                '@Url.Action("ListComments","Comment", new {PhotoID = Request.QueryString["PhotoID"]})', function () {
+                                }
+                            );
+
+                    },
+                    done: function (result) {
+                    }
+                });
+            });
+        });
+    </script>
+}

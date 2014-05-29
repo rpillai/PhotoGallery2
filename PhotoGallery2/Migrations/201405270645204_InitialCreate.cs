@@ -43,24 +43,15 @@ namespace PhotoGallery2.Migrations
                 c => new
                     {
                         CommentID = c.Int(nullable: false, identity: true),
-                        Comments = c.String(),
+                        Description = c.String(),
                         PhotoID = c.Int(nullable: false),
-                        ApplicationUser_Id = c.String(maxLength: 128),
+                        UserID = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.CommentID)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserID)
                 .ForeignKey("dbo.Photo", t => t.PhotoID, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
-                .Index(t => t.PhotoID)
-                .Index(t => t.ApplicationUser_Id);
-            
-            CreateTable(
-                "dbo.AspNetRoles",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id);
+                .Index(t => t.UserID)
+                .Index(t => t.PhotoID);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -114,29 +105,38 @@ namespace PhotoGallery2.Migrations
                 .Index(t => t.RoleId)
                 .Index(t => t.UserId);
             
+            CreateTable(
+                "dbo.AspNetRoles",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Comment", "ApplicationUser_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Photo", "AlbumID", "dbo.Album");
+            DropForeignKey("dbo.Comment", "PhotoID", "dbo.Photo");
+            DropForeignKey("dbo.Comment", "UserID", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "User_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Photo", "AlbumID", "dbo.Album");
-            DropForeignKey("dbo.Comment", "PhotoID", "dbo.Photo");
-            DropIndex("dbo.Comment", new[] { "ApplicationUser_Id" });
+            DropIndex("dbo.Photo", new[] { "AlbumID" });
+            DropIndex("dbo.Comment", new[] { "PhotoID" });
+            DropIndex("dbo.Comment", new[] { "UserID" });
             DropIndex("dbo.AspNetUserClaims", new[] { "User_Id" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
-            DropIndex("dbo.Photo", new[] { "AlbumID" });
-            DropIndex("dbo.Comment", new[] { "PhotoID" });
+            DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.AspNetRoles");
             DropTable("dbo.Comment");
             DropTable("dbo.Photo");
             DropTable("dbo.Album");

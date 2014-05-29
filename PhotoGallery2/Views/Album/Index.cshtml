@@ -12,23 +12,16 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-sm-4">
-            <div class="media">
-                <div class="media-heading">
-                    <p class="text-success">
-                        <strong> @item.AlbumName  <span class="badge">@item.PhotoCount</span></strong> 
-                    </p>
-                </div>
-                <div class="media-object pull-left">
-                    <a href="~/Photo?AlbumID=@item.AlbumID">
-                        <img src="@Url.Content(item.KeythumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
-                    </a>
-                </div>
-                <br />
-                <div class="media-body">
-                    <p class="text-info pull-left"> @item.Description</p>
-                </div>
-            </div>
+        <div class="col-lg-3 col-sm-4 col-xs-6">
+            <p class="text-success">
+                <strong> @item.AlbumName  <span class="badge">@item.PhotoCount</span></strong>
+            </p>
+            <a href="~/Photo?AlbumID=@item.AlbumID">
+                <img src="@Url.Content(item.KeythumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+            </a>
+            <br />
+            <p class="text-info"> @item.Description</p>
+            <p class="text-muted"> @string.Format("{0: dd-MMM-yyyy}",item.DateTaken)</p>
         </div>
     }
 </div>
