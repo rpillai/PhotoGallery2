@@ -1,18 +1,16 @@
-﻿@using System.Web.Util
-@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
 @{
     ViewBag.Title = "Roles";
 
-    if (User.Identity.IsAuthenticated)
-    {
-        <h1>
-            @Html.ActionLink("Create New", "Create", "Role")
-        </h1>
-    }
+
 }
-<div>
+<div class="body-content">
+    @if (User.Identity.IsAuthenticated)
+    {
+        @Html.ActionLink("Create New", "Create", "Role", htmlAttributes: new {@class = "btn-link"});
+    }
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-md-8">
             <h1>Role Name</h1>
         </div>
     </div>
@@ -23,7 +21,7 @@
                 @item.Name
             </div>
             <div class="col-lg-3">
-                @Html.ActionLink("Delete","Delete", new { id = @item.Id } )
+                @Html.ActionLink("Delete", "Delete", new { id = @item.Id })
             </div>
         </div>
     }

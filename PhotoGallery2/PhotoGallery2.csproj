@@ -197,6 +197,10 @@
     <Compile Include="Migrations\201406011236568_Comment table changes.Designer.cs">
       <DependentUpon>201406011236568_Comment table changes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201406020646384_CommentID Changes.cs" />
+    <Compile Include="Migrations\201406020646384_CommentID Changes.Designer.cs">
+      <DependentUpon>201406020646384_CommentID Changes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Album.cs" />
@@ -321,9 +325,11 @@
     <Content Include="Views\Photo\Edit.cshtml" />
     <Content Include="Views\Shared\FileNotFound.cshtml" />
     <Content Include="Views\Photo\Details.cshtml" />
-    <Content Include="Views\Comment\_CommentListPartial.cshtml" />
-    <Content Include="Views\Comment\_UpdateComment.cshtml" />
+    <Content Include="Views\Shared\_CommentListPartial.cshtml" />
+    <Content Include="Views\Shared\_UpdateComment.cshtml" />
     <Content Include="Views\Photo\_SlideShow.cshtml" />
+    <Content Include="Views\Photo\_DetailView.cshtml" />
+    <Content Include="Views\Comment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -339,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201406011236568_Comment table changes.resx">
       <DependentUpon>201406011236568_Comment table changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406020646384_CommentID Changes.resx">
+      <DependentUpon>201406020646384_CommentID Changes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

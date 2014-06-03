@@ -31,4 +31,10 @@ namespace PhotoGallery2.Models
 
         public virtual ICollection<Comment> Comments { get; set; } 
     }
+
+    public class ManagePhoto
+    {
+        public int PhotoID { get; set; }
+        public bool Check { get; set; }
+    }
 }

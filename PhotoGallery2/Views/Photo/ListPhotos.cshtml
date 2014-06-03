@@ -12,6 +12,12 @@
 <table class="table">
     <tr>
         <th>
+            @Html.CheckBox("chkAll")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhotoID)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
         <th>
@@ -29,6 +35,12 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.CheckBox("chkDeleteID")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhotoID)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
@@ -43,7 +55,8 @@
         <td>
             @Html.ActionLink("Edit", "Edit", new { photoID = item.PhotoID }) |
             @Html.ActionLink("Details", "Details", new { photoID = item.PhotoID }) |
-            @Html.ActionLink("Delete", "Delete", new { photoID = item.PhotoID })
+            @Html.ActionLink("Delete", "Delete", new { photoID = item.PhotoID }) |
+            @Html.ActionLink("Comments","Index","Comment",new { photoID = item.PhotoID },null )
         </td>
     </tr>
 }

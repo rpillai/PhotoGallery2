@@ -1,0 +1,78 @@
+﻿@model IEnumerable<PhotoGallery2.Models.Comment>
+@{
+    ViewBag.Title = "Index";
+}
+<div id="loadComments">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhotoID)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.CheckBox("chkDeleteID", false, htmlAttributes: new { value = item.CommentID })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhotoID)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.CommentID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.CommentID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.CommentID })
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="4">
+                <button type="submit" id="btnDelete" class="btn btn-default">Delete</button>
+            </td>
+        </tr>
+    </table>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#btnDelete').click(function (e) {
+                e.preventDefault();
+                var selected = new Array();
+                $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
+                        selected.push($(this).val());
+                });
+
+                if (selected.length) {
+                    $.ajax({
+                        type: 'POST',
+                        data: JSON.stringify(selected),
+                        url: '@Url.Action("DeleteComments","Comment")',
+                        contentType: 'application/json',
+                        success: function (result) {
+
+                        }
+                    });
+                }
+
+            });
+        });
+    </script>
+}
+

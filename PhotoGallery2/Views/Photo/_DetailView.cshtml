@@ -1,0 +1,15 @@
+﻿@model PhotoGallery2.Models.Photo
+<h4>@Model.Title</h4>
+<img src="@Model.PhotoPath" alt="@Model.Title" class="media-object img-responsive pull-left img-rounded img-responsive" />
+<p class="text-muted"><small>@Model.Description</small></p>
+<div id="pagerControl">
+    <ul class="pager">
+        <li class="previous">
+            <a href="~/Photo/GetNext?AlbumID=@Model.AlbumID&PhotoID=@Model.PhotoID&flag=P"><span class="glyphicon glyphicon-arrow-left"></span> Prev </a>
+        </li>
+        <li class="next">
+            <a href="~/Photo/GetNext?AlbumID=@Model.AlbumID&PhotoID=@Model.PhotoID&flag=N"> Next <span class="glyphicon glyphicon-arrow-right"></span></a>
+        </li>
+    </ul>
+</div>
+

@@ -4,9 +4,8 @@
     @using (Html.BeginForm("UpdateComment", "Comment", null, FormMethod.Post, new { id = "updateCommentForm" }))
     {
         <p class="small">
-            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 5, cols = 60, autofocus = true, required = true, placeholder = "Write comment" })
+            @Html.TextAreaFor(model => model.Description , new { @class = "form-control", rows = 5, cols = 60, autofocus = true, required = true, placeholder = "Write comment" })
         </p>
-
         @Html.HiddenFor(m => m.PhotoID)
         @Html.AntiForgeryToken()
         @Html.ValidationSummary()
