@@ -41,5 +41,7 @@ namespace PhotoGallery2.Models
                 manager.Create(user, string.Format("Password{0}", i.ToString()));
             }
         }
+
+        //public System.Data.Entity.DbSet<PhotoGallery2.Models.ApplicationUser> IdentityUsers { get; set; }
     }
 }

@@ -1,21 +1,21 @@
 ﻿@model PhotoGallery2.Models.RoleViewModel
-           @{
-               ViewBag.Title = "Create Role";
-           }
-<div>
+@{
+    ViewBag.Title = "Create Role";
+}
+<div class="container center-block" style="margin-top:10%;margin-left: 20%;margin-right: 20%">
     @Html.AntiForgeryToken()
-    @using (Html.BeginForm("Create", "Role", FormMethod.Post))
+    @using (Html.BeginForm("Create", "Role", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.ValidationSummary(true)
         <div class="form-group">
-            <div class="form-control">
-                @Html.LabelFor(item => item.Name)
+            @Html.LabelFor(item => item.Name, htmlAttributes: new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(item => item.Name, htmlAttributes: new { @class = "form-control" })
             </div>
-            <div class="form-control">
-                @Html.EditorFor(item => item.Name)
-            </div>
-            <div class="form-control">
-               <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </div>
     }

@@ -5,19 +5,26 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PhotoGallery2.Models;
+using System.Web.Security.AntiXss;
 
 namespace PhotoGallery2.Controllers
 {
     public class CommentController : Controller
     {
-        private PhotoDBContext context = new PhotoDBContext();
+        private readonly PhotoDBContext context = new PhotoDBContext();
 
-        public PartialViewResult ListComments(int photoID)
+        public ActionResult Index(int photoID)
         {
-            var comments = context.Comments.Where(c => c.PhotoID == photoID).ToList();
-            return PartialView("_CommentListPartial", comments);
+            return View(context.Photos.Find(photoID).Comments.ToList());
         }
 
+        public PartialViewResult ListComments(int PhotoID)
+        {
+            var photo = context.Photos.Find(PhotoID);
+            return PartialView("_CommentListPartial", photo.Comments.ToList());
+        }
+
+        [HttpGet]
         public PartialViewResult UpdateComment(int PhotoID)
         {
             var comment = new UpdateComment
@@ -29,16 +36,9 @@ namespace PhotoGallery2.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void UpdateComment(UpdateComment formData)
         {
-            //var photoID = Request["PhotoID"];
-            //var description = Request["Description"];
-
-            //var comment = new UpdateComment
-            //{
-            //    PhotoID = Convert.ToInt32(formData.PhotoID)
-            //};
-
             if (ModelState.IsValid)
             {
                 if (User.Identity.IsAuthenticated)
@@ -47,7 +47,7 @@ namespace PhotoGallery2.Controllers
 
                     context.Comments.Add(new Comment
                     {
-                        Description = formData.Description,
+                        Description = AntiXssEncoder.HtmlEncode(Server.HtmlEncode(formData.Description), false),
                         PhotoID = Convert.ToInt32(formData.PhotoID),
                         UserID = userID
                     });
@@ -55,6 +55,27 @@ namespace PhotoGallery2.Controllers
                     context.SaveChanges();
                 }
             }
+        }
+
+        [HttpPost]
+        public void DeleteComments(List<int> checkedID)
+        {
+            foreach (var i in checkedID)
+            {
+                var comment = context.Comments.Find(i);
+                context.Comments.Remove(comment);
+            }
+            context.SaveChanges();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (context != null)
+                    context.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

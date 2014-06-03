@@ -35,8 +35,8 @@ namespace PhotoGallery2.Controllers
                                                Title = x.Title,
                                                Description = x.Description,
                                                ThumbnailPath = thumPath + x.PhotoPath,
-                                               PhotoPath =  path + x.PhotoPath
-                                           }).OrderBy(p=> p.PhotoID);
+                                               PhotoPath = path + x.PhotoPath
+                                           }).OrderBy(p => p.PhotoID);
                 return View(photos);
             }
 
@@ -45,15 +45,23 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult ListPhotos()
         {
-            var photos = context.Photos.ToList().OrderBy( p=> p.PhotoID);
+            var photos = context.Photos.ToList().OrderBy(p => p.PhotoID).Take(10);
             return View(photos);
         }
 
         public ActionResult Details(int? photoID)
         {
+            ViewBag.PhotoID = photoID;
             var photo = context.Photos.Find(photoID);
             photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
             return View(photo);
+        }
+
+        public PartialViewResult _GetDetailsView(Photo photo)
+        {
+            //var photo = context.Photos.Find(photoID);
+            //photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
+            return PartialView("_DetailView", photo);
         }
 
         /// <summary>
@@ -96,7 +104,7 @@ namespace PhotoGallery2.Controllers
         public ActionResult Upload(int? albumID)
         {
 
-            ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name",albumID);
+            ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name", albumID);
             return View();
         }
 
@@ -143,17 +151,17 @@ namespace PhotoGallery2.Controllers
             var thumPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_THUMBS_ROOT);
 
             var photos = context.Photos.Where(p => p.AlbumID == albumID)
-                                           .Select(x => new 
+                                           .Select(x => new
                                            {
                                                title = x.Title,
-                                               href =  path + x.PhotoPath,
+                                               href = path + x.PhotoPath,
                                                thumbnail = thumPath + x.PhotoPath,
                                                type = x.ContentType
                                            });
 
             foreach (var p in photos)
             {
-                Console.WriteLine(p.thumbnail + "     " +  p.href);
+                Console.WriteLine(p.thumbnail + "     " + p.href);
             }
 
             return Json(photos, "data", JsonRequestBehavior.AllowGet);
@@ -161,13 +169,27 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult GetNext(int albumID, int photoID, string flag)
         {
-            var photo =
-                context.Photos.AsEnumerable().OrderBy(p => p.PhotoID)
-                .Where(p => p.AlbumID == albumID && p.PhotoID > photoID).Take(1).FirstOrDefault();
+            Photo photo;
 
-            if (photo == null)
-                photo = context.Photos.Where(p => p.AlbumID == albumID).OrderBy(p => p.PhotoID).First();
-                                                
+            if (flag == "N")
+            {
+                photo =
+                    context.Photos.AsEnumerable().OrderBy(p => p.PhotoID)
+                        .Where(p => p.AlbumID == albumID && p.PhotoID > photoID).Take(1).FirstOrDefault();
+
+                if (photo == null)
+                    photo = context.Photos.Where(p => p.AlbumID == albumID).OrderBy(p => p.PhotoID).First();
+            }
+            else
+            {
+                photo =
+                    context.Photos.AsEnumerable().OrderByDescending(p => p.PhotoID)
+                        .Where(p => p.AlbumID == albumID && p.PhotoID < photoID).Take(1).FirstOrDefault();
+
+                if (photo == null)
+                    photo = context.Photos.Where(p => p.AlbumID == albumID).OrderByDescending(p => p.PhotoID).First();
+            }
+
             photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
 
             return View("Details", photo);
@@ -216,7 +238,7 @@ namespace PhotoGallery2.Controllers
             return created;
         }
 
-        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
