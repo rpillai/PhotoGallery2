@@ -167,7 +167,7 @@ namespace PhotoGallery2.Controllers
             return Json(photos, "data", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetNext(int albumID, int photoID, string flag)
+        public JsonResult GetNext(int albumID, int photoID, string flag)
         {
             Photo photo;
 
@@ -192,7 +192,15 @@ namespace PhotoGallery2.Controllers
 
             photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
 
-            return View("Details", photo);
+            var photoData = new PhotoViewModel
+            {
+                PhotoID =  photo.PhotoID,
+                Description = photo.Description,
+                PhotoPath =  photo.PhotoPath,
+                Title =  photo.Title
+            };
+
+            return Json(photoData, "PhotoData", JsonRequestBehavior.AllowGet);
         }
 
         private void saveAndCreateThumbnail(string albumDirectory, int albumID, HttpPostedFileBase fileBase)

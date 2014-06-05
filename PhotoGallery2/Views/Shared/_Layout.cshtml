@@ -49,16 +49,12 @@
             </div>
         </div>
     </nav>
-    <div class="container">
+    <div class="container body-content">
         @RenderBody()
     </div>
-    <div id="footer">
-        <div class="container">
+        <div class="container body-content modal-footer">
             <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Ishaan Photo Gallery</p>
         </div>
-    </div>
-
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

@@ -13,6 +13,5 @@ namespace PhotoGallery2.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public virtual ICollection<Comment> Comments { get; set; } 
     }
 }

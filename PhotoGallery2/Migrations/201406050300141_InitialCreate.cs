@@ -45,10 +45,10 @@ namespace PhotoGallery2.Migrations
                         CommentID = c.Int(nullable: false, identity: true),
                         Description = c.String(),
                         PhotoID = c.Int(nullable: false),
-                        UserID = c.String(maxLength: 128),
+                        UserID = c.String(maxLength: 128, nullable:false),
                     })
                 .PrimaryKey(t => t.CommentID)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserID)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserID, cascadeDelete:true)
                 .ForeignKey("dbo.Photo", t => t.PhotoID, cascadeDelete: true)
                 .Index(t => t.UserID)
                 .Index(t => t.PhotoID);
