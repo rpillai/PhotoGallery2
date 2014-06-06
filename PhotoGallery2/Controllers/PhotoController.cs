@@ -9,8 +9,10 @@ using System.Net.Mime;
 using System.Security.AccessControl;
 using System.Web;
 using System.Web.Helpers;
+using System.Web.Management;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
+using Microsoft.SqlServer.Server;
 using PhotoGallery2.Models;
 
 
@@ -49,6 +51,26 @@ namespace PhotoGallery2.Controllers
             return View(photos);
         }
 
+        [HttpPost]
+        public void DeletePhotos(List<int> photoIDList)
+        {
+            if(photoIDList.Count == 0) return;
+
+            foreach (var i in photoIDList)
+            {
+                var photo = context.Photos.Find(i);
+
+                if (photo == null) continue;
+
+                context.Photos.Remove(photo);
+ 
+                deletePhotoFile(photo.PhotoPath);
+            }
+            context.SaveChanges();
+
+        }
+
+
         public ActionResult Details(int? photoID)
         {
             ViewBag.PhotoID = photoID;
@@ -59,8 +81,6 @@ namespace PhotoGallery2.Controllers
 
         public PartialViewResult _GetDetailsView(Photo photo)
         {
-            //var photo = context.Photos.Find(photoID);
-            //photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
             return PartialView("_DetailView", photo);
         }
 
@@ -244,6 +264,20 @@ namespace PhotoGallery2.Controllers
             }
 
             return created;
+        }
+
+
+        private void deletePhotoFile(string filePath)
+        {
+            var fileInfo = new FileInfo(Path.Combine(Server.MapPath(ServerConstants.PHOTO_ROOT), filePath));
+
+            if (fileInfo.Exists)
+                fileInfo.Delete();
+
+            fileInfo = new FileInfo(Path.Combine(Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT), filePath));
+
+            if (fileInfo.Exists)
+                fileInfo.Delete();
         }
 
 

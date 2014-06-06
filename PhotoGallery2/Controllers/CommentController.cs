@@ -21,8 +21,8 @@ namespace PhotoGallery2.Controllers
 
         public PartialViewResult ListComments(int PhotoID)
         {
-            var photo = context.Photos.Find(PhotoID);
-            return PartialView("_CommentListPartial", photo.Comments.ToList());
+            var comments = context.Comments.Where(c => c.PhotoID == PhotoID).ToList();
+            return PartialView("_CommentListPartial", comments);
         }
 
         [HttpGet]
