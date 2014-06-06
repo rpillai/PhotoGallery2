@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Details";
 }
+<!-- Main Content Section -->
 <div class="row">
     <div class="col-md-9">
         <div id="detailsView">
@@ -25,11 +26,12 @@
         </div>
     </div>
 </div>
+<!-- Bottom Navigation Section -->
 <div class="row">
     <div class="col-md-8">
         <ul class="pager" style="margin: 0px auto">
             <li class="prev">
-                <a href="~/Photo?AlbumID=@Model.AlbumID"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
+                <a href="~/Album"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
             </li>
             <li>
                 <a id="launch">
@@ -46,65 +48,14 @@
         </ul>
     </div>
 </div>
+<!-- Slide Show Section -->
 @Html.Partial("_SlideShow")
-<input type="hidden" id="albumID" value="@Model.AlbumID" />
+<input type="hidden" id="AlbumID" value="@Model.AlbumID" />
+
 @section Scripts{
     @Scripts.Render("~/bundles/boostrap-image-gallery")
     @Scripts.Render("~/bundles/jquery.blueimp-gallery")
     @Scripts.Render("~/bundles/bootstrap-image-gallery")
     <script type="text/javascript" src="~/Scripts/PhotoGallery/StartSlideShow.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('#btnSubmit').click(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    data: {
-                        'PhotoID': $('#PhotoID').val(),
-                        'Comment': $('#Description').val(),
-                        '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    url: '@Url.Action("UpdateComment", "Comment")',
-                    success: function (result) {
-                        $('#Description').val('');
-                        loadCommentData($('#PhotoID').val());
-                    },
-                    error: function (error) {
-
-                    }
-                });
-            });
-
-            $('#prevButton').click(function (e) {
-                e.preventDefault();
-                getPhotoData('P');
-            });
-
-            $('#nextButton').click(function (e) {
-                e.preventDefault();
-                getPhotoData('N');
-            });
-
-            function getPhotoData(next) {
-                $.getJSON('@Url.Action("GetNext", "Photo")', {
-                    'PhotoID': $('#PhotoID').val(),
-                    'AlbumID': '@Model.AlbumID',
-                    'Flag': next == 'N' ? 'N' : 'P'
-                }).done(function (result) {
-                    $('#detailsView img').attr('src', result['PhotoPath']);
-                    $('#detailsView h4').text(result['Title']);
-                    $('#detailsView p').text(result['Description']);
-                    $('#PhotoID').val(result['PhotoID']);
-                    loadCommentData(result['PhotoID']);
-                });
-            };
-
-            function loadCommentData(photoId) {
-                $('#commentsList').load(
-                        '@Url.Action("ListComments", "Comment")',
-                                      { 'PhotoID': photoId }, function () {
-                                      });
-            }
-        });
-    </script>
+    <script type="text/javascript" src="~/Scripts/PhotoGallery/PhotoDetailsView.js"></script>
 }

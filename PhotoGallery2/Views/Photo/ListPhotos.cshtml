@@ -1,98 +1,50 @@
 ﻿@model IEnumerable<PhotoGallery2.Models.Photo>
 @{
     ViewBag.Title = "ListPhotos";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>List of Photos</h2>
+<div class="panel panel-primary">
+    <div class="panel panel-heading">
+        <h2 class="panel-title">List of Photos</h2>        
+    </div>
+    <div id="listPhotos" class="panel-body">
+        @{
+            Html.RenderPartial("_ListPhotos", Model);
+        }
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-danger" type="button" id="btnDelete">
+            <span class="glyphicon glyphicon-trash"></span>
+            Delete
+        </button>
+    </div>
+</div>
+@Html.AntiForgeryToken()
 
-@*<p>
-        @Html.ActionLink("Create New", "Create")
-    </p>*@
-<table class="table">
-    <tr>
-        <th>
-            @Html.CheckBox("chkAll")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PhotoID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FileName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AlbumID)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.CheckBox("chkDeleteID", new { value = item.PhotoID })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhotoID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AlbumID)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { photoID = item.PhotoID }) |
-                @Html.ActionLink("Details", "Details", new { photoID = item.PhotoID }) |
-                @Html.ActionLink("Delete", "Delete", new { photoID = item.PhotoID }) |
-                @Html.ActionLink("Comments", "Index", "Comment", new { photoID = item.PhotoID }, null)
-            </td>
-        </tr>
-    }
-    <tfoot>
-        <tr>
-            <td colspan="6">
-                <button type="button" id="btnDelete" class="btn btn-danger">
-                    Delete
-                </button>
-            </td>
-        </tr>
-    </tfoot>
-</table>
-@section Scripts{
+@section scripts
+{
     <script type="text/javascript">
         $(function () {
             $('#btnDelete').click(function (e) {
                 e.preventDefault();
                 var selected = new Array();
                 $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
-                    selected.push($(this).val());
+                        selected.push($(this).val());
                 });
 
                 if (selected.length) {
                     $.ajax({
                         type: 'POST',
                         data: JSON.stringify(selected),
-                        url: '@Url.Action("DeletePhotos", "Photo")',
+                        url: '@Url.Action("DeletePhotos","Photo")',
                         contentType: 'application/json',
                         success: function (result) {
 
                         }
                     });
                 }
+
             });
         });
-    </script>
+</script>
 }

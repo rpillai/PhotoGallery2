@@ -267,6 +267,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.7.2.js" />
+    <Content Include="Scripts\PhotoGallery\PhotoDetailsView.js" />
     <Content Include="Scripts\PhotoGallery\StartSlideShow.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -321,6 +322,7 @@
     <Content Include="Views\Photo\_SlideShow.cshtml" />
     <Content Include="Views\Photo\_DetailView.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
+    <Content Include="Views\Photo\_ListPhotos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -353,7 +355,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54801</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:54802/</IISUrl>
+          <IISUrl>http://localhost:54801/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

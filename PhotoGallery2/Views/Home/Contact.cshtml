@@ -1,24 +1,27 @@
 ﻿@{
     ViewBag.Title = "Contact Us";
 }
-<div class="col-md-offset-3 col-md-3" style="margin-top: 10%">
-    <div class="well">
-        <h2>@ViewBag.Title</h2>
+<div class="col-md-offset-3 col-md-6">
+    <div class="panel panel-collapse panel-primary body-center">
+        <div class="panel-heading">
+            <h2 class="panel-title">@ViewBag.Title</h2>
+        </div>
         @*<h3>@ViewBag.Message</h3>*@
+        <div class="panel-body">
+            <address>
+                @*One Microsoft Way<br />
+                    Redmond, WA 98052-6399<br />*@
 
-        <address>
-            @*One Microsoft Way<br />
-                Redmond, WA 98052-6399<br />*@
+                <abbr title="Phone">
+                    <span class="glyphicon glyphicon-phone "></span>
+                    61. 422 651 500
+                </abbr>
+            </address>
 
-            <abbr title="Phone">
-                <span class="glyphicon glyphicon-phone "></span>
-                61. 422 651 500
-            </abbr>
-        </address>
-
-        <address>
-            <span class="glyphicon glyphicon-envelope"></span>  <a href="mailto:Support@ishaan.com.au">Support@ishaan.com.au</a><br />
-            <span class="glyphicon glyphicon-envelope"></span>  <a href="mailto:ramesh.pillai@gmail.com">ramesh.pillai@gmail.com</a>
-        </address>
+            <address>
+                <span class="glyphicon glyphicon-envelope"></span>  <a href="mailto:Support@ishaan.com.au">Support@ishaan.com.au</a><br />
+                <span class="glyphicon glyphicon-envelope"></span>  <a href="mailto:ramesh.pillai@gmail.com">ramesh.pillai@gmail.com</a>
+            </address>
+        </div>
     </div>
 </div>
