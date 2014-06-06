@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using PhotoGallery2.Models;
 using System.Web.Security.AntiXss;
 
@@ -37,21 +38,21 @@ namespace PhotoGallery2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void UpdateComment(UpdateComment formData)
+        public void UpdateComment(int photoID, string comment)
         {
             if (ModelState.IsValid)
             {
                 if (User.Identity.IsAuthenticated)
                 {
+                    //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                     string userID = HttpContext.User.Identity.GetUserId();
 
                     context.Comments.Add(new Comment
                     {
-                        Description = AntiXssEncoder.HtmlEncode(Server.HtmlEncode(formData.Description), false),
-                        PhotoID = Convert.ToInt32(formData.PhotoID),
-                        UserID = userID
+                        Description = AntiXssEncoder.HtmlEncode(Server.HtmlEncode(comment), false),
+                        PhotoID = photoID,
+                        UserID = userID,
                     });
-                    formData.Description = null;
                     context.SaveChanges();
                 }
             }

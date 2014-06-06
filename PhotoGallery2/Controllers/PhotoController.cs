@@ -108,6 +108,35 @@ namespace PhotoGallery2.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        public void DeletePhotos(List<int> photoID)
+        {
+            var albumDirectory = Server.MapPath(ServerConstants.PHOTO_ROOT);
+            var thumbnailDirectory = Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT);
+
+            foreach (var i in photoID)
+            {
+                var photo = context.Photos.Find(i);
+
+                if(photo == null) continue;
+
+                var albumID = photo.AlbumID;
+
+                var fileInfo = new FileInfo(Path.Combine(albumDirectory, photo.PhotoPath));
+                if (fileInfo.Exists)
+                    fileInfo.Delete();
+
+                fileInfo = new FileInfo(Path.Combine(thumbnailDirectory, photo.PhotoPath));
+
+                if (fileInfo.Exists)
+                    fileInfo.Delete();
+
+                context.Photos.Remove(photo);
+            }
+            context.SaveChanges();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken()]
         [Authorize(Roles = "Administrator")]
@@ -116,7 +145,7 @@ namespace PhotoGallery2.Controllers
             var albumDirectory = Server.MapPath(ServerConstants.PHOTO_ROOT);
             var albumID = Convert.ToInt32(formData["Albums"]);
 
-            albumDirectory += albumID + "/";
+            albumDirectory += albumID + "\\";
 
             for (var i = 0; i < Request.Files.Count; i++)
             {
@@ -167,7 +196,7 @@ namespace PhotoGallery2.Controllers
             return Json(photos, "data", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetNext(int albumID, int photoID, string flag)
+        public JsonResult GetNext(int albumID, int photoID, string flag)
         {
             Photo photo;
 
@@ -192,7 +221,15 @@ namespace PhotoGallery2.Controllers
 
             photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
 
-            return View("Details", photo);
+            var photoData = new PhotoViewModel
+            {
+                PhotoID =  photo.PhotoID,
+                Description = photo.Description,
+                PhotoPath =  photo.PhotoPath,
+                Title =  photo.Title
+            };
+
+            return Json(photoData, "PhotoData", JsonRequestBehavior.AllowGet);
         }
 
         private void saveAndCreateThumbnail(string albumDirectory, int albumID, HttpPostedFileBase fileBase)
@@ -201,17 +238,17 @@ namespace PhotoGallery2.Controllers
 
             if (checkAndCreateDirectory(albumDirectory))
             {
-                fileBase.SaveAs(albumDirectory + "\\" + fileBase.FileName);
+                fileBase.SaveAs(albumDirectory + "\\" + Path.GetFileName(fileBase.FileName));
             }
 
 
             if (checkAndCreateDirectory(albumThumbnailDirectory))
             {
-                var bitMap = Image.FromFile(albumDirectory + "\\" + fileBase.FileName);
+                var bitMap = Image.FromFile(albumDirectory + "\\" + Path.GetFileName(fileBase.FileName));
 
                 var thumbnail = bitMap.GetThumbnailImage(160, 160, null, IntPtr.Zero);
 
-                thumbnail.Save(albumThumbnailDirectory + fileBase.FileName);
+                thumbnail.Save(albumThumbnailDirectory + Path.GetFileName(fileBase.FileName));
 
                 bitMap.Dispose();
             }

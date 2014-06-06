@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Photo Gallery</title>
+    <title>@ViewBag.Title - Ishaan Photo Gallery</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -49,14 +49,12 @@
             </div>
         </div>
     </nav>
-    <div class="container">
+    <div class="container body-content">
         @RenderBody()
-        <footer class="modal-footer">
-            <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Photo Gallery</p>
-        </footer>
     </div>
-
-
+        <div class="container body-content modal-footer">
+            <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Ishaan Photo Gallery</p>
+        </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

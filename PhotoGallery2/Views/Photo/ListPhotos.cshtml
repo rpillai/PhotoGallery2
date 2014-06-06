@@ -7,8 +7,8 @@
 <h2>List of Photos</h2>
 
 @*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@
+        @Html.ActionLink("Create New", "Create")
+    </p>*@
 <table class="table">
     <tr>
         <th>
@@ -32,33 +32,67 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.CheckBox("chkDeleteID")
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PhotoID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FileName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AlbumID)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { photoID = item.PhotoID }) |
-            @Html.ActionLink("Details", "Details", new { photoID = item.PhotoID }) |
-            @Html.ActionLink("Delete", "Delete", new { photoID = item.PhotoID }) |
-            @Html.ActionLink("Comments","Index","Comment",new { photoID = item.PhotoID },null )
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.CheckBox("chkDeleteID", new { value = item.PhotoID })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhotoID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AlbumID)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { photoID = item.PhotoID }) |
+                @Html.ActionLink("Details", "Details", new { photoID = item.PhotoID }) |
+                @Html.ActionLink("Delete", "Delete", new { photoID = item.PhotoID }) |
+                @Html.ActionLink("Comments", "Index", "Comment", new { photoID = item.PhotoID }, null)
+            </td>
+        </tr>
+    }
+    <tfoot>
+        <tr>
+            <td colspan="6">
+                <button type="button" id="btnDelete" class="btn btn-danger">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    </tfoot>
 </table>
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#btnDelete').click(function (e) {
+                e.preventDefault();
+                var selected = new Array();
+                $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
+                    selected.push($(this).val());
+                });
+
+                if (selected.length) {
+                    $.ajax({
+                        type: 'POST',
+                        data: JSON.stringify(selected),
+                        url: '@Url.Action("DeletePhotos", "Photo")',
+                        contentType: 'application/json',
+                        success: function (result) {
+
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

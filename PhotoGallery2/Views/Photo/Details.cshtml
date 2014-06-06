@@ -3,80 +3,49 @@
 @{
     ViewBag.Title = "Details";
 }
-<div class="container">
-    <div class="col-lg-6">
-        <div class="media">
-            <div class="media-heading">
-                <p>@Model.Title</p>
-                <p class="text-info">The title of the Photo.</p>
-            </div>
-            <img src="@Model.PhotoPath" alt="@Model.Title" class="img-rounded img-responsive media-object" />
-            <br />
-            <div class="media-body">
-                <p>The photo description goes here.</p>
-            </div>
+<div class="row">
+    <div class="col-md-9">
+        <div id="detailsView">
+            @{
+                Html.RenderPartial("_DetailView", Model);
+            }
         </div>
-
-        @Html.HiddenFor(model => model.AlbumID)
     </div>
-    <div class="col-lg-6">
-        <div class="form-horizontal">
-            <div class="form-group">
-                <textarea id="txtComment" rows="5" cols="10" class="form-control col-lg-6"></textarea>
-                <div class="col-sm-3">
-                    <button type="submit" class="btn btn-primary form-control">
-                        <span class="glyphicon glyphicon-comment"></span>
-                        Comment
-                    </button>
-                </div>
-            </div>
+    <div class="col-md-3">
+        <div id="commentsList">
+            @{
+                Html.RenderAction("ListComments", "Comment", new { PhotoID = Model.PhotoID });
+            }
+        </div>
+        <br />
+        <div id="submit">
+            @{
+                Html.RenderPartial("_UpdateComment", new UpdateComment { PhotoID = Model.PhotoID, Description = null });
+            }
         </div>
     </div>
 </div>
-<p>
-    @Html.ActionLink("Back to Photos", "Index", new { AlbumID = Model.AlbumID })
-</p>
-<div class="container center-block">
-    <div class="row">
-        <div class="col-md-8">
-            <ul class="pager">
-                <li class="">
-                    <a href="~/Photo?AlbumID=@Model.AlbumID"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
-                </li>
-                <li>
-                    <a id="launch">
-                        <i class="glyphicon glyphicon-camera"></i>
-                        Start Slide Show
-                    </a>
-                </li>
-            </ul>
-        </div>
+<div class="row">
+    <div class="col-md-8">
+        <ul class="pager" style="margin: 0px auto">
+            <li class="prev">
+                <a href="~/Photo?AlbumID=@Model.AlbumID"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
+            </li>
+            <li>
+                <a id="launch">
+                    <i class="glyphicon glyphicon-camera"></i>
+                    Start Slide Show
+                </a>
+            </li>
+            <li class="next">
+                <a href="#">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    Like
+                </a>
+            </li>
+        </ul>
     </div>
-    <div class="row">
-        <div class="col-md-8">
-            <div id="detailsView">
-                @{
-                    Html.RenderPartial("_DetailView", Model);
-                }
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div id="commentsList">
-                @{
-                    Html.RenderAction("ListComments","Comment",new { PhotoID = Model.PhotoID });
-                }
-            </div>
-            <br />
-            <div id="submit">
-                @{
-                    Html.RenderPartial("_UpdateComment", new UpdateComment { PhotoID = Model.PhotoID, Description = null });
-                }
-            </div>
-        </div>
-    </div>
-    
 </div>
-
 @Html.Partial("_SlideShow")
 <input type="hidden" id="albumID" value="@Model.AlbumID" />
 @section Scripts{
@@ -84,30 +53,58 @@
     @Scripts.Render("~/bundles/jquery.blueimp-gallery")
     @Scripts.Render("~/bundles/bootstrap-image-gallery")
     <script type="text/javascript" src="~/Scripts/PhotoGallery/StartSlideShow.js"></script>
-
     <script type="text/javascript">
         $(function () {
             $('#btnSubmit').click(function (e) {
                 e.preventDefault();
                 $.ajax({
                     type: 'POST',
-                    data: $('#updateCommentForm').serialize(),
+                    data: {
+                        'PhotoID': $('#PhotoID').val(),
+                        'Comment': $('#Description').val(),
+                        '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
                     url: '@Url.Action("UpdateComment", "Comment")',
                     success: function (result) {
                         $('#Description').val('');
-                        $('#commentsList').load(
-                                '@Url.Action("ListComments","Comment", new {PhotoID = Request.QueryString["PhotoID"]})', function () {
-                                }
-                            );
+                        loadCommentData($('#PhotoID').val());
                     },
-                    error: function(error) {
-                        alert(error);
-                    },
-                    done: function (result) {
+                    error: function (error) {
+
                     }
                 });
             });
+
+            $('#prevButton').click(function (e) {
+                e.preventDefault();
+                getPhotoData('P');
+            });
+
+            $('#nextButton').click(function (e) {
+                e.preventDefault();
+                getPhotoData('N');
+            });
+
+            function getPhotoData(next) {
+                $.getJSON('@Url.Action("GetNext", "Photo")', {
+                    'PhotoID': $('#PhotoID').val(),
+                    'AlbumID': '@Model.AlbumID',
+                    'Flag': next == 'N' ? 'N' : 'P'
+                }).done(function (result) {
+                    $('#detailsView img').attr('src', result['PhotoPath']);
+                    $('#detailsView h4').text(result['Title']);
+                    $('#detailsView p').text(result['Description']);
+                    $('#PhotoID').val(result['PhotoID']);
+                    loadCommentData(result['PhotoID']);
+                });
+            };
+
+            function loadCommentData(photoId) {
+                $('#commentsList').load(
+                        '@Url.Action("ListComments", "Comment")',
+                                      { 'PhotoID': photoId }, function () {
+                                      });
+            }
         });
     </script>
 }
->>>>>>> 9b411f82761d944f06a29078e54cd4c53353618a
