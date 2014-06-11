@@ -1,17 +1,17 @@
 ﻿@model PhotoGallery2.Models.UpdateComment
-
 <div class="form-horizontal">
     @using (Html.BeginForm("UpdateComment", "Comment", null, FormMethod.Post, new { id = "updateCommentForm" }))
     {
         <p class="small">
-            @Html.TextAreaFor(model => model.Description , new { @class = "form-control", rows = 5, cols = 60, autofocus = true, required = true, placeholder = "Write comment" })
+            @Html.TextAreaFor(model => model.Description , new { @class = "form-control", rows = 5, cols = 60, autofocus = true})
+            @Html.ValidationMessageFor(model=> model.Description)
         </p>
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
-
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.PhotoID)
         <button type="button" class="btn btn-sm btn-primary" id="btnSubmit">
             <span class="glyphicon glyphicon-comment"></span>
             Comment
         </button>
+        @Html.Hidden("CommentListUrl", Url.Action("ListComments", "Comment"), new { id = "CommentListUrl" })
     }
 </div>

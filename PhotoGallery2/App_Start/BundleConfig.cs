@@ -32,8 +32,6 @@ namespace PhotoGallery2
             bundles.Add(new ScriptBundle("~/bundles/jquery.blueimp-gallery","~/Scripts/blueimp-gallery/jquery.blueimp-gallery.js"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-image-gallery", "~/Scripts/blueimp-gallery/bootstrap-image-gallery.js"));
 
-
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/bootstrap.css",
                         "~/Content/site.css"));

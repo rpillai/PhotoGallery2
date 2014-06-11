@@ -1,14 +1,15 @@
 ﻿$(function () {
     $('#btnSubmit').click(function (e) {
         e.preventDefault();
+        if ($('#updateCommentForm').valid() == false) return;
+
         $.ajax({
             type: 'POST',
             data: {
-                'PhotoID': $('#PhotoID').val(),
-                'Comment': $('#Description').val(),
-                '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                PhotoID: $('#PhotoID').val(),
+                Description: $('#Description').val()
             },
-            url: '@Url.Action("UpdateComment", "Comment")',
+            url: $('#updateCommentForm').attr('action'),
             success: function (result) {
                 $('#Description').val('');
                 loadCommentData($('#PhotoID').val());
@@ -45,7 +46,7 @@
 
     function loadCommentData(photoId) {
         $('#commentsList').load(
-                '/Comment/ListComments',
+                $('#CommentListUrl').val(),
                               { 'PhotoID': photoId }, function () {
                               });
     }

@@ -24,7 +24,7 @@ namespace PhotoGallery2.Models
 
     public class UpdateComment
     {
-        [Required(ErrorMessage = "Please enter some comment",AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "Please enter comment",AllowEmptyStrings = false)]
         public string Description { get; set; }
 
         public int PhotoID { get; set; }

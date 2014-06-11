@@ -1,9 +1,11 @@
 ﻿$(document).ready(function () {
     document.getElementById('launch').onclick = function (event) {
         event.preventDefault();
-        var albumID = document.getElementById("albumID").value;
+        var albumID = $('#AlbumID').val();
+        var url = $('#SlideShowUrl').val();
+
         $.ajax({
-            url: '/Photo/GetPhotosForSlideShow?AlbumID=' + albumID,
+            url: url,
             datatype: 'json'
         }).done(function (result) {
             var obj = $.parseJSON(result);

@@ -37,8 +37,7 @@ namespace PhotoGallery2.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public void UpdateComment(int photoID, string comment)
+        public void UpdateComment(int PhotoID, string  Description)
         {
             if (ModelState.IsValid)
             {
@@ -49,8 +48,8 @@ namespace PhotoGallery2.Controllers
 
                     context.Comments.Add(new Comment
                     {
-                        Description = AntiXssEncoder.HtmlEncode(Server.HtmlEncode(comment), false),
-                        PhotoID = photoID,
+                        Description = AntiXssEncoder.HtmlEncode(Server.HtmlEncode(Description), false),
+                        PhotoID = PhotoID,
                         UserID = userID,
                     });
                     context.SaveChanges();

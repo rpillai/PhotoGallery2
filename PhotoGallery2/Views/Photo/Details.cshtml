@@ -34,7 +34,7 @@
                 <a href="~/Album"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
             </li>
             <li>
-                <a id="launch">
+                <a href="#" id="launch">
                     <i class="glyphicon glyphicon-camera"></i>
                     Start Slide Show
                 </a>
@@ -49,6 +49,7 @@
     </div>
 </div>
 <!-- Slide Show Section -->
+@Html.Hidden("SlideShowUrl", Url.Action("GetPhotosForSlideShow", new { albumID = Model.AlbumID }))
 @Html.Partial("_SlideShow")
 <input type="hidden" id="AlbumID" value="@Model.AlbumID" />
 

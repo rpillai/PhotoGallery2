@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Photos";
 }
-<input type="hidden" id="albumID" value="@Request.QueryString["AlbumID"]" />
+<input type="hidden" id="AlbumID" value="@Request.QueryString["AlbumID"]" />
 <div class="row">
     <div class="body-content pull-left">
         <p>
@@ -32,6 +32,7 @@
         </div>
     }
 </div>
+@Html.Hidden("SlideShowUrl", Url.Action("GetPhotosForSlideShow", new { albumID = Request.QueryString["AlbumID"] }))
 <br />
 @Html.Partial("_SlideShow")
 

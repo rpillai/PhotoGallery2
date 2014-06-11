@@ -128,35 +128,6 @@ namespace PhotoGallery2.Controllers
             return View();
         }
 
-
-        [HttpPost]
-        public void DeletePhotos(List<int> photoID)
-        {
-            var albumDirectory = Server.MapPath(ServerConstants.PHOTO_ROOT);
-            var thumbnailDirectory = Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT);
-
-            foreach (var i in photoID)
-            {
-                var photo = context.Photos.Find(i);
-
-                if(photo == null) continue;
-
-                var albumID = photo.AlbumID;
-
-                var fileInfo = new FileInfo(Path.Combine(albumDirectory, photo.PhotoPath));
-                if (fileInfo.Exists)
-                    fileInfo.Delete();
-
-                fileInfo = new FileInfo(Path.Combine(thumbnailDirectory, photo.PhotoPath));
-
-                if (fileInfo.Exists)
-                    fileInfo.Delete();
-
-                context.Photos.Remove(photo);
-            }
-            context.SaveChanges();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken()]
         [Authorize(Roles = "Administrator")]

@@ -3,11 +3,11 @@
     ViewBag.Title = "Index";
 }
 <div id="loadComments">
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
     <table class="table">
         <tr>
+            <th>
+                @Html.CheckBox("chkAll", false, new { id = "chkAll" })
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.User.UserName)
             </th>
@@ -50,8 +50,11 @@
     </table>
 </div>
 @section Scripts{
+    <script type="text/javascript" src="~/Scripts/PhotoGallery/GlobalFunctions.js"></script>
+
     <script type="text/javascript">
-        $(function () {
+        deleteUrl = '@Url.Action("DeleteComments","Comment")';
+        @*$(function () {
             $('#btnDelete').click(function (e) {
                 e.preventDefault();
                 var selected = new Array();
@@ -72,7 +75,15 @@
                 }
 
             });
-        });
+
+            //$('#chkAll').change(function () {
+            //    var checkedVal = this.checked;
+
+            //    $("input[id='chkDeleteID'][type='checkbox']").each(function(index,context) {
+            //        this.checked = checkedVal;
+            //    });
+            //});
+        });*@
     </script>
 }
 

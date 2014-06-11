@@ -23,28 +23,5 @@
 
 @section scripts
 {
-    <script type="text/javascript">
-        $(function () {
-            $('#btnDelete').click(function (e) {
-                e.preventDefault();
-                var selected = new Array();
-                $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
-                        selected.push($(this).val());
-                });
-
-                if (selected.length) {
-                    $.ajax({
-                        type: 'POST',
-                        data: JSON.stringify(selected),
-                        url: '@Url.Action("DeletePhotos","Photo")',
-                        contentType: 'application/json',
-                        success: function (result) {
-
-                        }
-                    });
-                }
-
-            });
-        });
-</script>
+    <script type="text/javascript" src="~/Scripts/PhotoGallery/GlobalFunctions.js"></script> 
 }
