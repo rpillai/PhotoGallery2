@@ -18,30 +18,15 @@ namespace PhotoGallery2.Models
         public DbSet<Album> Albums { get; set; }
         public DbSet<Comment> Comments { get; set; }
         
-        public PhotoDBContext() 
+        public PhotoDBContext()
             : base("PhotoDBContext")
         {
             
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        public static PhotoDBContext Create()
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new PhotoDBContext()));
-
-            for (int i = 0; i < 4; i++)
-            {
-                var user = new ApplicationUser()
-                {
-                    UserName = string.Format("User {0}", i.ToString())
-                };
-
-                manager.Create(user, string.Format("Password{0}", i.ToString()));
-            }
+            return new PhotoDBContext();
         }
-
-        //public System.Data.Entity.DbSet<PhotoGallery2.Models.ApplicationUser> IdentityUsers { get; set; }
     }
 }

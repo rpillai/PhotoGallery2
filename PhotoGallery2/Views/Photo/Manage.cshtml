@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<PhotoGallery2.Models.Photo>
 @{
-    ViewBag.Title = "ListPhotos";
+    ViewBag.Title = "Manage Photo";
 }
 
 <div class="panel panel-primary">
@@ -9,7 +9,7 @@
     </div>
     <div id="listPhotos" class="panel-body">
         @{
-            Html.RenderPartial("_ListPhotos", Model);
+            Html.RenderAction("_ListPhotos","Photo");
         }
     </div>
     <div class="panel-footer">
@@ -24,27 +24,32 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
-            $('#btnDelete').click(function (e) {
+        $(function() {
+            $('#btnDelete').click(function(e) {
                 e.preventDefault();
                 var selected = new Array();
-                $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
-                        selected.push($(this).val());
+                $("input[id='chkDeleteID'][type='checkbox']:checked").each(function() {
+                    selected.push($(this).val());
                 });
 
                 if (selected.length) {
                     $.ajax({
                         type: 'POST',
                         data: JSON.stringify(selected),
-                        url: '@Url.Action("DeletePhotos","Photo")',
+                        url: '@Url.Action("DeletePhotos", "Photo")',
                         contentType: 'application/json',
-                        success: function (result) {
-
+                        success: function(result) {
+                            $('#listPhotos').load(
+                                '_ListPhotos',
+                                {},
+                                function() {
+                                    
+                                }
+                            );
                         }
                     });
                 }
-
             });
         });
-</script>
+    </script>
 }

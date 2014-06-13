@@ -3,58 +3,58 @@
 @{
     ViewBag.Title = "Create";
 }
-
-<h2>Create</h2>
-
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Album</h4>
-        <hr />
-        @Html.ValidationSummary(true)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </div>
+<div class="col-md-offset-2 col-md-6">
+    <div class="panel panel-collapse panel-primary">
+        <div class="panel panel-heading">
+            <h2 class="panel-title">New Album</h2>
         </div>
+        <div class="panel-body">
+            @using (Html.BeginForm(null,null,FormMethod.Post,new { @class="form-horizontal"}))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description)
-                @Html.ValidationMessageFor(model => model.Description)
-            </div>
-        </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.Name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateDate)
-                @Html.ValidationMessageFor(model => model.CreateDate)
-            </div>
-        </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Description, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.Description, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Description)
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.KeyPhotoPath, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.KeyPhotoPath)
-                @Html.ValidationMessageFor(model => model.KeyPhotoPath)
-            </div>
-        </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.CreateDate, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.CreateDate, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CreateDate)
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-6">
+                            <input type="submit" value="Create" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>

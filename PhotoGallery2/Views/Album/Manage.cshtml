@@ -1,0 +1,84 @@
+﻿@using System.Web.UI.HtmlControls
+@model IEnumerable<PhotoGallery2.Models.Album>
+@{
+    ViewBag.Title = "ListAlbums";
+}
+<div class="col-lg-10">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">List of Albums</h2>
+
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateDate)
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="col-lg-3">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td class="col-lg-5">
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateDate)
+                            </td>
+                            <td class="btn btn-group">
+                                <a href="@Url.Action("Details", new { id = item.AlbumID })" class="glyphicon glyphicon-book btn btn-sm">
+                                    <span class="sr-only">
+                                        Details
+                                    </span>
+                                </a>
+                                <a href="@Url.Action("Edit",new { id = item.AlbumID })" class="glyphicon glyphicon-edit btn btn-sm">
+                                    <span class="sr-only">
+                                        Edit
+                                    </span>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = item.AlbumID })" class="glyphicon glyphicon-trash btn btn-sm">
+                                    <span class="sr-only">
+                                        Delete
+                                    </span>
+                                </a>
+                                <a href="@Url.Action("Upload","Photo", new { id = item.AlbumID })" class="glyphicon glyphicon-upload btn btn-sm">
+                                    <span class="sr-only">
+                                        Upload
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                                <a href="@Url.Action("Create")">
+                                    <div class="glyphicon glyphicon-plus">
+                                        <span class="sr-only">
+                                            Create New
+                                        </span>
+                                    </div>
+                                </a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+

@@ -21,7 +21,7 @@
         <br />
         <div id="submit">
             @{
-                Html.RenderPartial("_UpdateComment", new UpdateComment { PhotoID = Model.PhotoID, Description = null });
+                Html.RenderAction("UpdateComment", "Comment", new UpdateComment { PhotoID = Model.PhotoID, Description = null });
             }
         </div>
     </div>
@@ -34,7 +34,7 @@
                 <a href="~/Album"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>
             </li>
             <li>
-                <a id="launch">
+                <a href="#" id="launch">
                     <i class="glyphicon glyphicon-camera"></i>
                     Start Slide Show
                 </a>
@@ -49,9 +49,10 @@
     </div>
 </div>
 <!-- Slide Show Section -->
-@Html.Partial("_SlideShow")
-<input type="hidden" id="AlbumID" value="@Model.AlbumID" />
-
+<div id="slideShowSection">
+    @Html.Partial("_SlideShow")
+    <input type="hidden" id="AlbumID" value="@Model.AlbumID" />
+</div>
 @section Scripts{
     @Scripts.Render("~/bundles/boostrap-image-gallery")
     @Scripts.Render("~/bundles/jquery.blueimp-gallery")

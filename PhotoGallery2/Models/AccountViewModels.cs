@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -8,8 +9,14 @@ namespace PhotoGallery2.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
+
+    public class ExternalLoginListViewModel
+    {
+        public string ReturnUrl { get; set; }
     }
 
     public class ManageUserViewModel
@@ -49,8 +56,9 @@ namespace PhotoGallery2.Models
     public class RegisterViewModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -67,6 +75,7 @@ namespace PhotoGallery2.Models
     public class SelectUserRolesViewModel
     {
         public List<SelectRoleEditorViewModel> Roles { get; set; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
@@ -82,7 +91,7 @@ namespace PhotoGallery2.Models
             this.FirstName = user.FirstName;
             this.LastName = user.LastName;
             this.UserName = user.UserName;
-
+            
             var context = new PhotoDBContext();
             var allRoles = context.Roles;
 
@@ -94,8 +103,8 @@ namespace PhotoGallery2.Models
 
             foreach (var userRole in user.Roles)
             {
-                var checkUserRole = this.Roles.Find(r => r.RoleName == userRole.Role.Name);
-                checkUserRole.Selected = true;
+                //var checkUserRole = this.Roles.Find(r => r.RoleName == userRole.
+                //checkUserRole.Selected = true;
             }
         }
 
@@ -113,5 +122,34 @@ namespace PhotoGallery2.Models
         public bool Selected { get; set; }
 
         public string RoleName { get; set; }
+    }
+
+    public class ForgotPasswordModel
+    {
+        [Required]
+        [EmailAddress]
+
+        public string Email { get; set; }
+    }
+
+    public class ResetPasswordViewModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be atleast {2} characters long", MinimumLength = 6)]
+        [Display(Name="Password")]
+        public string Password { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be atleast {2} characters long", MinimumLength = 6)]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match")]
+        [Display(Name = "Confirm Password")]
+        public string ConfirmPassword { get; set; }
+
+        public string Code { get; set; }
     }
 }

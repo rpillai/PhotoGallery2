@@ -1,17 +1,21 @@
+using System;
+using System.Data.Entity.Core.Objects.DataClasses;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using System.Web;
+using Microsoft.AspNet.Identity.Owin;
 using PhotoGallery2.Models;
 using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace PhotoGallery2.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PhotoGallery2.Models.PhotoDBContext>
+
+    internal sealed class Configuration : DbMigrationsConfiguration<PhotoDBContext>
     {
         public Configuration()
         {
@@ -19,10 +23,9 @@ namespace PhotoGallery2.Migrations
             ContextKey = "PhotoGallery2.Models.PhotoDBContext";
         }
 
-        protected override void Seed(PhotoGallery2.Models.PhotoDBContext context)
+        protected override void Seed(PhotoDBContext context)
         {
             //  This method will be called after migrating to the latest version.
-
             var albums = new List<Album>
             {
                 new Album
@@ -48,34 +51,44 @@ namespace PhotoGallery2.Migrations
             albums.ForEach(a => context.Albums.AddOrUpdate(n => n.Name, a));
             context.SaveChanges();
 
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
+            var roleManager = new ApplicationRoleManager(new RoleStore<IdentityRole>(context));
 
-            IdentityResult role = null;
+            const string roleName = "Administrator";
 
-            if (roleManager.RoleExists("Administrator") == false)
-                role = roleManager.Create(new IdentityRole("Administrator"));
+            var role = roleManager.FindByName(roleName);
 
-            if (context.Users.FirstOrDefault(u => u.UserName == "rpillai") == null)
+            if (role == null)
             {
-                var newUser = new ApplicationUser
+                role = new IdentityRole(roleName);
+                roleManager.Create(role);
+            }
+
+            var newUser = userManager.FindByName("ramesh.pillai@gmail.com");
+
+            if (newUser == null)
+            {
+                newUser = new ApplicationUser
                 {
                     FirstName = "Ramesh",
                     LastName = "Pillai",
-                    UserName = "rpillai",
-                    Id = Guid.NewGuid().ToString()
+                    UserName = "ramesh.pillai@gmail.com",
+                    Email = "ramesh.pillai@gmail.com",
+                    EmailConfirmed = true
                 };
 
                 var success = userManager.Create(newUser, "Password1");
-
-                if (role != null
-                    && role.Succeeded)
-                    userManager.AddToRole(newUser.Id, "Administrator");
+                success = userManager.SetLockoutEnabled(newUser.Id, false);
             }
 
-            if (roleManager.RoleExists("testRole") == false)
-                role = roleManager.Create(new IdentityRole("testRole"));
+            var rolesForUser = userManager.GetRoles(newUser.Id);
 
+            if (rolesForUser.Contains(role.Name) == false)
+            {
+                userManager.AddToRole(newUser.Id, roleName);
+            }
+
+            base.Seed(context);
 
         }
     }
