@@ -223,6 +223,7 @@
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\PagedList.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\PhotoDBContext.cs" />
     <Compile Include="Models\PhotoViewModel.cs" />

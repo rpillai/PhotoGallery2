@@ -1,59 +1,72 @@
-﻿@model IEnumerable<PhotoGallery2.Models.Photo>
-    <table class="table table-responsive table-hover table-condensed">
-        <thead>
+﻿@using PhotoGallery2.Models
+@model PagedDataList<ManagePhotoModel>
+<table class="table table-responsive table-hover table-condensed">
+    <thead>
+        <tr>
+            <th>
+                @Html.CheckBox("chkAll")
+            </th>
+            <th>
+                PhotoID
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Album Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PagedEntity)
+        {
             <tr>
-                <th>
-                    @Html.CheckBox("chkAll")
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PhotoID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FileName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.AlbumID)
-                </th>
-                <th></th>
+                <td>
+                    @Html.CheckBox("chkDeleteID", htmlAttributes: new { value = item.PhotoID , @class="input-group checkbox-inline" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhotoID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                    
+                <td class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AlbumName)
+                </td>
+                <td>
+                    @Html.ActionLink(" Edit", "Edit", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-edit btn btn-warning" })
+                    @Html.ActionLink(" Details", "Details", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-ok btn btn-info" })
+                    @Html.ActionLink(" Comments", "Index", "Comment", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-comment btn btn-primary" })
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.CheckBox("chkDeleteID", htmlAttributes: new { value = item.PhotoID , @class="input-group checkbox-inline" })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PhotoID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FileName)
-                    </td>
-                    <td class="col-md-3">
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AlbumID)
-                    </td>
-                    <td>
-                        @Html.ActionLink(" Edit", "Edit", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-edit btn btn-warning" })
-                        @Html.ActionLink(" Details", "Details", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-ok btn btn-info" })
-                        @*@Html.ActionLink(" Delete", "Delete", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-trash btn btn-danger" })*@
-                        @Html.ActionLink(" Comments", "Index", "Comment", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-comment btn btn-primary" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }   
+        <tr>
+            <td colspan="4">
+                    <ul class="pagination pagination-sm">
+                        @for (int i = 1; i <= ViewBag.NumberOfPages; i++)
+                        {
+                            <li>
+                                <button type="button" class="btn btn-link">
+                                    @i
+                                </button>
+                            </li>
+                        }
+                    </ul>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+
+
 
 

@@ -21,13 +21,15 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-sm-3">
-            <h4>@item.Title</h4>
-            <div id="links" class="media-object">
+        <div class="col-xs-4">
+            <div id="links">
                 <a href="~/Photo/Details?PhotoID=@item.PhotoID">
-                    <img src="@Url.Content(item.ThumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+                    <img src="@Url.Content(item.ThumbnailPath)" class="img-rounded img-responsive"
+                         data-toggle="tooltip at the bottom" data-title="" data-placement="bottom"
+                         alt="album-thumbnail" />
                 </a>
             </div>
+            <h4>@item.Title</h4>
             <br />
             <p class="text-muted">@item.Description</p>
         </div>

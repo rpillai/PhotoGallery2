@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Management;
 using System.Web.Mvc;
+using System.Web.UI;
 using Microsoft.Ajax.Utilities;
 using Microsoft.SqlServer.Server;
 using PhotoGallery2.Models;
@@ -47,19 +48,56 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Manage()
         {
+
             return View();
         }
 
         public PartialViewResult _ListPhotos()
         {
-            var photos = context.Photos.ToList().OrderBy(p => p.PhotoID).Take(10);
+            var photos = new PagedDataList<ManagePhotoModel>
+            {
+                PagedEntity = context.Photos.OrderBy(x => x.PhotoID).Select(p => new ManagePhotoModel
+                {
+                    PhotoID = p.PhotoID,
+                    Description = p.Description,
+                    Title = p.Title,
+                    AlbumName = p.Album.Name
+                }).Take(5).ToList(),
+
+                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / 5))
+            };
+
+            ViewBag.NumberOfPages = photos.NumberOfPages;
+
             return PartialView(photos);
         }
+
+
+        public PartialViewResult GetNextResult(int currentPageNumber, int pageSize)
+        {
+            var photos = new PagedDataList<ManagePhotoModel>
+            {
+                PagedEntity = context.Photos.OrderBy(x=> x.PhotoID).Select(p => new ManagePhotoModel
+                {
+                    PhotoID = p.PhotoID,
+                    Description = p.Description,
+                    Title = p.Title,
+                    AlbumName = p.Album.Name
+                }).Skip(pageSize * (currentPageNumber - 1)).Take(pageSize).ToList(),
+
+                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / 5)),
+                CurrentPage = currentPageNumber
+            };
+            ViewBag.NumberOfPages = photos.NumberOfPages;
+            return PartialView("_ListPhotos", photos);
+        }
+
+
 
         [HttpPost]
         public void DeletePhotos(List<int> photoIDList)
         {
-            if(photoIDList.Count == 0) return;
+            if (photoIDList.Count == 0) return;
 
             foreach (var i in photoIDList)
             {
@@ -68,7 +106,7 @@ namespace PhotoGallery2.Controllers
                 if (photo == null) continue;
 
                 context.Photos.Remove(photo);
- 
+
                 deletePhotoFile(photo.PhotoPath);
             }
             context.SaveChanges();
@@ -104,7 +142,7 @@ namespace PhotoGallery2.Controllers
                 return View(photo);
             }
 
-            return RedirectToAction("ListPhotos");
+            return RedirectToAction("Manage");
 
         }
 
@@ -123,7 +161,7 @@ namespace PhotoGallery2.Controllers
                 context.SaveChanges();
             }
 
-            return RedirectToAction("ListPhotos");
+            return RedirectToAction("Manage");
         }
 
         public ActionResult Upload(int? albumID)
@@ -219,10 +257,10 @@ namespace PhotoGallery2.Controllers
 
             var photoData = new PhotoViewModel
             {
-                PhotoID =  photo.PhotoID,
+                PhotoID = photo.PhotoID,
                 Description = photo.Description,
-                PhotoPath =  photo.PhotoPath,
-                Title =  photo.Title
+                PhotoPath = photo.PhotoPath,
+                Title = photo.Title
             };
 
             return Json(photoData, "PhotoData", JsonRequestBehavior.AllowGet);
