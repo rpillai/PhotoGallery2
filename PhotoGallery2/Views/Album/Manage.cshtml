@@ -39,22 +39,22 @@
                                 @Html.DisplayFor(modelItem => item.CreateDate)
                             </td>
                             <td class="btn btn-group">
-                                <a href="@Url.Action("Details", new { id = item.AlbumID })" class="glyphicon glyphicon-book btn btn-sm">
+                                <a href="@Url.Action("Details", new { id = item.AlbumID })" class="glyphicon glyphicon-ok btn btn-default">
                                     <span class="sr-only">
                                         Details
                                     </span>
                                 </a>
-                                <a href="@Url.Action("Edit",new { id = item.AlbumID })" class="glyphicon glyphicon-edit btn btn-sm">
+                                <a href="@Url.Action("Edit",new { id = item.AlbumID })" class="glyphicon glyphicon-edit btn btn-default">
                                     <span class="sr-only">
                                         Edit
                                     </span>
                                 </a>
-                                <a href="@Url.Action("Delete", new { id = item.AlbumID })" class="glyphicon glyphicon-trash btn btn-sm">
+                                <a href="@Url.Action("Delete", new { id = item.AlbumID })" class="glyphicon glyphicon-trash btn btn-default">
                                     <span class="sr-only">
                                         Delete
                                     </span>
                                 </a>
-                                <a href="@Url.Action("Upload","Photo", new { id = item.AlbumID })" class="glyphicon glyphicon-upload btn btn-sm">
+                                <a href="@Url.Action("Upload","Photo", new { id = item.AlbumID })" class="glyphicon glyphicon-upload btn btn-default">
                                     <span class="sr-only">
                                         Upload
                                     </span>

@@ -5,19 +5,16 @@
 <div id="loadComments">
     <table class="table">
         <tr>
-            <th>
+            <th class="col-xs-1">
                 @Html.CheckBox("chkAll", false, new { id = "chkAll" })
             </th>
-            <th>
+            <th class="col-xs-3">
                 @Html.DisplayNameFor(model => model.User.UserName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhotoID)
-            </th>
-            <th></th>
+            <th class="col-xs-2"> </th>
         </tr>
 
         @foreach (var item in Model)
@@ -32,24 +29,26 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhotoID)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.CommentID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.CommentID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.CommentID })
+                <td class="text-justify">
+                    @Html.ActionLink(" ", "Edit", new { id = item.CommentID }, new { @class = "glyphicon glyphicon-edit " }) |
+                    @Html.ActionLink(" ", "Details", new { id = item.CommentID }, new { @class = "glyphicon glyphicon-ok" })
                 </td>
             </tr>
         }
         <tr>
             <td colspan="4">
-                <button type="submit" id="btnDelete" class="btn btn-default">Delete</button>
+                <button type="submit" id="btnDelete" class="btn btn-danger">Delete</button>
             </td>
+            
         </tr>
     </table>
 </div>
-@Html.Hidden("DeleteUrl",@Url.Action("DeleteComments","Comment"))
+<div>
+    @Html.ActionLink("Back to photos", "Manage", "Photo")
+
+
+</div>
+@Html.Hidden("DeleteUrl", @Url.Action("DeleteComments", "Comment"))
 
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/PhotoGallery/GlobalFunctions.js"></script>

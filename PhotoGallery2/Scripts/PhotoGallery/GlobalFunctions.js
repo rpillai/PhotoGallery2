@@ -18,6 +18,20 @@
             this.checked = checkedVal;
         });
     });
+}).on('click', '.btn.btn-link', function () {
+    $.ajax({
+        url: 'GetNextResult',
+        data: {
+            currentPageNumber: $(this).text().trim(),
+            pageSize : 5
+        },
+        error: function(error) {
+                            
+        },
+        success: function(result) {
+            $('#EntityList').html(result);
+        }
+    });
 });
 
 function callDeleteAjax(selected) {

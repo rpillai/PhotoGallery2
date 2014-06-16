@@ -223,6 +223,7 @@
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\PagedList.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\PhotoDBContext.cs" />
     <Compile Include="Models\PhotoViewModel.cs" />
@@ -272,8 +273,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
+    <!--<Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />-->
     <None Include="Properties\PublishProfiles\ishaanphotos - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ishaanphotos - Web Deploy.pubxml" />
     <Content Include="Scripts\blueimp-gallery\blueimp-gallery.min.js.map">

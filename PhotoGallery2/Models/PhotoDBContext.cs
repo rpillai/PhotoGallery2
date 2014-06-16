@@ -19,7 +19,7 @@ namespace PhotoGallery2.Models
         public DbSet<Comment> Comments { get; set; }
         
         public PhotoDBContext()
-            : base("PhotoDBContext")
+            : base("PhotoDBContext",throwIfV1Schema: false)
         {
             
         }
