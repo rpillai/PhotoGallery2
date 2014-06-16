@@ -2,6 +2,7 @@
 <div class="form-horizontal">
     @using (Html.BeginForm("UpdateComment", "Comment", null, FormMethod.Post, new { id = "updateCommentForm" }))
     {
+        @Html.AntiForgeryToken();
         <p class="small">
             @Html.TextAreaFor(model => model.Description , new { @class = "form-control", rows = 5, cols = 60, autofocus = true})
             @Html.ValidationMessageFor(model=> model.Description)

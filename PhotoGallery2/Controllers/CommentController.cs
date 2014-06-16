@@ -37,6 +37,7 @@ namespace PhotoGallery2.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void UpdateComment(int PhotoID, string  Description)
         {
             if (ModelState.IsValid)
@@ -60,6 +61,8 @@ namespace PhotoGallery2.Controllers
         [HttpPost]
         public void DeleteComments(List<int> checkedID)
         {
+            if (checkedID == null) return;
+
             foreach (var i in checkedID)
             {
                 var comment = context.Comments.Find(i);

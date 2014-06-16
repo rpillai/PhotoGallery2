@@ -45,10 +45,16 @@ namespace PhotoGallery2.Controllers
             return RedirectToAction("Index", "Album");
         }
 
-        public ActionResult ListPhotos()
+        public ActionResult Manage()
+        {
+            var photos = context.Photos.Include(p => p.Album.Name = p.Album.Name);
+            return View();
+        }
+
+        public PartialViewResult _ListPhotos()
         {
             var photos = context.Photos.ToList().OrderBy(p => p.PhotoID).Take(10);
-            return View(photos);
+            return PartialView(photos);
         }
 
         [HttpPost]

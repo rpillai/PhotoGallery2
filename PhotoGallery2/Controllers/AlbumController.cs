@@ -37,7 +37,7 @@ namespace PhotoGallery2.Controllers
             return View(model);
         }
 
-        public ActionResult ListAlbums()
+        public ActionResult Manage()
         {
             var albums = db.Albums.ToList();
             return View(albums);
@@ -75,7 +75,7 @@ namespace PhotoGallery2.Controllers
             {
                 db.Albums.Add(album);
                 db.SaveChanges();
-                return RedirectToAction("ListAlbums");
+                return RedirectToAction("Manage");
             }
 
             return View(album);

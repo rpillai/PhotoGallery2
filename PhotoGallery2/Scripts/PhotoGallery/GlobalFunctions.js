@@ -24,12 +24,13 @@ function callDeleteAjax(selected) {
     $.ajax({
         type: 'POST',
         data: JSON.stringify(selected),
-        url: deleteUrl,
+        url: $('#DeleteUrl').val(),
         contentType: 'application/json',
         success: function (result) {
-            //alert(result);
+            //code to reload the lists again.
+            $('#EntityList').load({
+                 
+            })
         }
     });
 }
-
-var deleteUrl = 'Photo/DeletePhotos';

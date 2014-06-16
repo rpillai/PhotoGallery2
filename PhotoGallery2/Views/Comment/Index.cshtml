@@ -49,41 +49,9 @@
         </tr>
     </table>
 </div>
+@Html.Hidden("DeleteUrl",@Url.Action("DeleteComments","Comment"))
+
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/PhotoGallery/GlobalFunctions.js"></script>
-
-    <script type="text/javascript">
-        deleteUrl = '@Url.Action("DeleteComments","Comment")';
-        @*$(function () {
-            $('#btnDelete').click(function (e) {
-                e.preventDefault();
-                var selected = new Array();
-                $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
-                        selected.push($(this).val());
-                });
-
-                if (selected.length) {
-                    $.ajax({
-                        type: 'POST',
-                        data: JSON.stringify(selected),
-                        url: '@Url.Action("DeleteComments","Comment")',
-                        contentType: 'application/json',
-                        success: function (result) {
-
-                        }
-                    });
-                }
-
-            });
-
-            //$('#chkAll').change(function () {
-            //    var checkedVal = this.checked;
-
-            //    $("input[id='chkDeleteID'][type='checkbox']").each(function(index,context) {
-            //        this.checked = checkedVal;
-            //    });
-            //});
-        });*@
-    </script>
 }
 

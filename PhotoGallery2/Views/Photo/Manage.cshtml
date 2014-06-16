@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<PhotoGallery2.Models.Photo>
 @{
-    ViewBag.Title = "ListPhotos";
+    ViewBag.Title = "Manage Photo";
 }
 
 <div class="panel panel-primary">
     <div class="panel panel-heading">
         <h2 class="panel-title">List of Photos</h2>        
     </div>
-    <div id="listPhotos" class="panel-body">
+    <div id="EntityList" class="panel-body">
         @{
-            Html.RenderPartial("_ListPhotos", Model);
+            Html.RenderAction("_ListPhotos","Photo");
         }
     </div>
     <div class="panel-footer">
@@ -19,6 +19,9 @@
         </button>
     </div>
 </div>
+
+@Html.Hidden("DeleteUrl", Url.Action("DeletePhotos","Photo"))
+@Html.Hidden("ReloadUrl",Url.Action("_ListPhotos"))
 @Html.AntiForgeryToken()
 
 @section scripts

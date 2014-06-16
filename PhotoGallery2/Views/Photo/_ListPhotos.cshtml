@@ -28,7 +28,7 @@
             {
                 <tr>
                     <td>
-                        @Html.CheckBox("chkDeleteID", htmlAttributes: new { value = item.PhotoID })
+                        @Html.CheckBox("chkDeleteID", htmlAttributes: new { value = item.PhotoID , @class="input-group checkbox-inline" })
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PhotoID)
@@ -43,7 +43,7 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AlbumID)
+                        @Html.DisplayFor(modelItem => item.Album.Name)
                     </td>
                     <td>
                         @Html.ActionLink(" Edit", "Edit", new { photoID = item.PhotoID }, new { @class = "glyphicon glyphicon-edit btn btn-warning" })

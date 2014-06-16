@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div id="commentsList">
+        <div id="EntityList">
             @{
                 Html.RenderAction("ListComments", "Comment", new { PhotoID = Model.PhotoID });
             }
@@ -21,7 +21,7 @@
         <br />
         <div id="submit">
             @{
-                Html.RenderPartial("_UpdateComment", new UpdateComment { PhotoID = Model.PhotoID, Description = null });
+                Html.RenderAction("UpdateComment", "Comment", new UpdateComment { PhotoID = Model.PhotoID, Description = null });
             }
         </div>
     </div>
@@ -49,10 +49,11 @@
     </div>
 </div>
 <!-- Slide Show Section -->
+<div id="slideShowSection">
 @Html.Hidden("SlideShowUrl", Url.Action("GetPhotosForSlideShow", new { albumID = Model.AlbumID }))
 @Html.Partial("_SlideShow")
 <input type="hidden" id="AlbumID" value="@Model.AlbumID" />
-
+</div>
 @section Scripts{
     @Scripts.Render("~/bundles/boostrap-image-gallery")
     @Scripts.Render("~/bundles/jquery.blueimp-gallery")

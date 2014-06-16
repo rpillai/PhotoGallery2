@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json.Serialization;
 using PhotoGallery2.Models;
 
@@ -20,15 +21,28 @@ namespace PhotoGallery2.Controllers
     public class RoleController : Controller
     {
         private PhotoDBContext context;
-        public RoleManager<IdentityRole> RoleManager { get; set; }
-        public UserManager<ApplicationUser> UserManager { get; set; } 
+        public ApplicationRoleManager _roleManager { get; set; }
+        public ApplicationUserManager _userManager { get; set; } 
 
         public RoleController()
         {
             context = new PhotoDBContext();
-            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
+
+        public ApplicationUserManager UserManager
+        {
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            set { _userManager = value; }
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get { return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>(); }
+
+            set { _roleManager = value; }
+        }
+
+
 
         public ActionResult Index()
         {
@@ -119,14 +133,11 @@ namespace PhotoGallery2.Controllers
         {
             if (ModelState.IsValid)
             {
-                RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-                UserManager  = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
                 var user = context.Users.First(u => u.UserName == model.UserName);
 
                 foreach (var role in context.Roles)
                 {
-                    UserManager.RemoveFromRole(user.Id, role.Name);
+                    UserManager.RemoveFromRoleAsync(user.Id, role.Name);
                 }
 
                 foreach (var role in model.Roles)

@@ -2,13 +2,10 @@
     $('#btnSubmit').click(function (e) {
         e.preventDefault();
         if ($('#updateCommentForm').valid() == false) return;
-
+        var data = $('#updateCommentForm').serialize();
         $.ajax({
             type: 'POST',
-            data: {
-                PhotoID: $('#PhotoID').val(),
-                Description: $('#Description').val()
-            },
+            data: data,
             url: $('#updateCommentForm').attr('action'),
             success: function (result) {
                 $('#Description').val('');
@@ -39,13 +36,13 @@
             $('#detailsView img').attr('src', result['PhotoPath']);
             $('#detailsView h4').text(result['Title']);
             $('#detailsView p').text(result['Description']);
-            $('#PhotoID').val(result['PhotoID']);
+            $('#PhotoID').attr('value',result['PhotoID']);
             loadCommentData(result['PhotoID']);
         });
     };
 
     function loadCommentData(photoId) {
-        $('#commentsList').load(
+        $('#EntityList').load(
                 $('#CommentListUrl').val(),
                               { 'PhotoID': photoId }, function () {
                               });

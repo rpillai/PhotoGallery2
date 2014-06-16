@@ -29,6 +29,7 @@ namespace PhotoGallery2.Models
 
         public int AlbumID { get; set; }
 
+        public virtual Album Album { get; set; }
         public virtual ICollection<Comment> Comments { get; set; } 
     }
 

@@ -1,9 +1,11 @@
-﻿@using Microsoft.Owin.Security
+﻿@model PhotoGallery2.Models.ExternalLoginListViewModel
+@using Microsoft.Owin.Security
 
-<h4>Use another service to log in.</h4>
+<h4 class="title">Use another service to log in</h4>
 <hr />
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    
     if (loginProviders.Count() == 0)
     {
         <div>
@@ -13,9 +15,7 @@
     }
     else
     {
-        string action = Model.Action;
-        string returnUrl = Model.ReturnUrl;
-        using (Html.BeginForm(action, "Account", new { ReturnUrl = returnUrl }))
+        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl }))
         {
             @Html.AntiForgeryToken()
             <div id="socialLoginList">
