@@ -63,9 +63,9 @@ namespace PhotoGallery2.Controllers
                     Description = p.Description,
                     Title = p.Title,
                     AlbumName = p.Album.Name
-                }).Take(5).ToList(),
+                }).Take(ServerConstants.PAGE_SIZE).ToList(),
 
-                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / 5))
+                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / ServerConstants.PAGE_SIZE))
             };
 
             ViewBag.NumberOfPages = photos.NumberOfPages;
@@ -74,7 +74,7 @@ namespace PhotoGallery2.Controllers
         }
 
 
-        public PartialViewResult GetNextResult(int currentPageNumber, int pageSize)
+        public PartialViewResult GetNextResult(int currentPageNumber)
         {
             var photos = new PagedDataList<ManagePhotoModel>
             {
@@ -84,9 +84,9 @@ namespace PhotoGallery2.Controllers
                     Description = p.Description,
                     Title = p.Title,
                     AlbumName = p.Album.Name
-                }).Skip(pageSize * (currentPageNumber - 1)).Take(pageSize).ToList(),
+                }).Skip(ServerConstants.PAGE_SIZE * (currentPageNumber - 1)).Take(ServerConstants.PAGE_SIZE).ToList(),
 
-                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / 5)),
+                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / ServerConstants.PAGE_SIZE)),
                 CurrentPage = currentPageNumber
             };
             ViewBag.NumberOfPages = photos.NumberOfPages;

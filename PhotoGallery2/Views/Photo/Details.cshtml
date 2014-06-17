@@ -5,14 +5,14 @@
 }
 <!-- Main Content Section -->
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-xs-9 col-md-9">
         <div id="detailsView">
             @{
                 Html.RenderPartial("_DetailView", Model);
             }
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-xs-9 col-md-3">
         <div id="EntityList">
             @{
                 Html.RenderAction("ListComments", "Comment", new { PhotoID = Model.PhotoID });
@@ -26,9 +26,10 @@
         </div>
     </div>
 </div>
+<br/>
 <!-- Bottom Navigation Section -->
 <div class="row">
-    <div class="col-xs-8 text-center">
+    <div class="col-xs-12 col-md-9 text-center">
         <ul class="pagination" style="margin: 0px auto">
             <li class="prev">
                 <a href="~/Album"><span class="glyphicon glyphicon-picture"></span> Back to Photos </a>

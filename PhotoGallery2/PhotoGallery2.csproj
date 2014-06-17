@@ -243,7 +243,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.new.css" />
-    <Content Include="Content\bootstrap.min.new.css" />
+    <Content Include="Content\bootstrap.new.min.css" />
     <Content Include="Content\img\error.png" />
     <Content Include="Content\img\error.svg" />
     <Content Include="Content\img\loading.gif" />

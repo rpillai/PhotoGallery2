@@ -21,21 +21,21 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li class="hidden-xs hidden-sm visible-lg visible-md">@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Gallery", "Index", "Album")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li class="hidden-xs hidden-sm visible-lg visible-md">@Html.ActionLink("Contact", "Contact", "Home")</li>
                     @if (User.Identity.IsAuthenticated
                             && User.IsInRole("Administrator"))
                     {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage Users<b class="caret"></b></a>
+                        <li class="dropdown hidden-xs hidden-sm visible-lg visible-md ">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("Manage Users", "Index", "UserAdmin")</li>
                                 <li>@Html.ActionLink("Manage Roles", "Index", "Role")</li>
 
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown hidden-xs hidden-sm visible-lg visible-md">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage Photos<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("Photo", "Manage", "Photo")</li>
@@ -52,9 +52,9 @@
     <div class="container body-content">
         @RenderBody()
     </div>
-        <div class="container body-content modal-footer">
-            <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Ishaan Photo Gallery</p>
-        </div>
+    <div class="container body-content modal-footer">
+        <p><span class="glyphicon glyphicon-copyright-mark"></span> @DateTime.Now.Year - Ishaan Photo Gallery</p>
+    </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")

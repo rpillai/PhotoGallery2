@@ -2,12 +2,12 @@
 @{
     ViewBag.Title = "Photos";
 }
-<input type="hidden" id="AlbumID" value="@Request.QueryString["AlbumID"]" />
 <div class="row">
     <div class="body-content pull-left">
-        <p>
-            @Html.ActionLink("Back to Gallery", "Index", "Album")
-        </p>
+        <a href="@Url.Action("Index","Album")" class="btn btn-primary">
+            <span class=" glyphicon glyphicon-picture"></span>
+            Gallery
+        </a>
     </div>
     <div class="col-lg-offset-1 pull-right">
         <button id="launch" class="btn btn-primary pull-left">
@@ -20,7 +20,7 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-xs-4 media">
+        <div class="col-xs-4 media" style="margin-top: 15px">
             <a href="~/Photo/Details?PhotoID=@item.PhotoID" class="pull-left">
                 <img src="@Url.Content(item.ThumbnailPath)" class="img-rounded img-responsive media-object"
                      data-toggle="tooltip at the bottom" data-title="" data-placement="bottom"
@@ -28,7 +28,7 @@
             </a>
             <div class="media-body">
                 <div class="media-heading">
-                    <h4>@item.Title</h4>
+                    <h5>@item.Title</h5>
                 </div>
                 <p class="text-muted pull-right">@item.Description</p>
             </div>
@@ -37,6 +37,7 @@
     }
 </div>
 @Html.Hidden("SlideShowUrl", Url.Action("GetPhotosForSlideShow", new { albumID = Request.QueryString["AlbumID"] }))
+<input type="hidden" id="AlbumID" value="@Request.QueryString["AlbumID"]" />
 <br />
 @Html.Partial("_SlideShow")
 

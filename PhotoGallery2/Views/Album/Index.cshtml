@@ -3,20 +3,27 @@
     ViewBag.Title = "Album";
 }
 
-<div class="body-content row">
+<div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-lg-3 col-sm-4 col-xs-6">
-            <p class="text-success">
-                <strong> @item.AlbumName  <span class="badge">@item.PhotoCount</span></strong>
-            </p>
-            <a href="~/Photo?AlbumID=@item.AlbumID">
-                <img src="@Url.Content(item.KeythumbnailPath)" class="media-object img-rounded img-responsive" alt="album-thumbnail" />
+        <div class="col-sm-4 media" style="margin-top: 15px">
+            <a class="pull-left" href="~/Photo?AlbumID=@item.AlbumID">
+                <img src="@Url.Content(item.KeythumbnailPath)" class=" img-rounded img-responsive media-object" alt="album-thumbnail" />
+                <span class="badge" style=" position: absolute;top:0px;left:160px">@item.PhotoCount</span>
             </a>
-            <br />
-            <p class="text-info"> @item.Description</p>
-            <p class="text-muted"> @string.Format("{0: dd-MMM-yyyy}",item.DateTaken)</p>
+            <div class="media-heading">
+                <h5 class="label label-success">
+                    @item.AlbumName
+                </h5>
+            </div>
+            <div class="media-body">
+                <p class=""> @item.Description</p>
+            </div>
+            <div class="media-list">
+                <p class="pull-left small info"> @string.Format("{0: dd-MMM-yyyy}", item.DateTaken)</p>
+            </div>
         </div>
+
     }
 </div>
 

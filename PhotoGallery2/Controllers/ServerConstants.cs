@@ -11,5 +11,6 @@ namespace PhotoGallery2.Controllers
     {
         public const string PHOTO_ROOT =  @"~\Photos\";
         public const string PHOTO_THUMBS_ROOT = @"~\Photos\thumbs\";
+        public const int PAGE_SIZE = 10;
     }
 }
