@@ -1,0 +1,22 @@
+﻿@model PhotoGallery2.Models.UpdateUserModel
+@using Microsoft.AspNet.Identity
+
+@using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "updateProfile" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <p>You're logged in as <strong>@User.Identity.GetUserName()</strong>.</p>
+    </div>
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+        @Html.ValidationMessageFor(m => m.FirstName)
+    </div>
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+        @Html.ValidationMessageFor(m => m.LastName)
+     </div>
+    <div class="form-group">
+        <button type="button" id="btnUpdateProfile" class="btn btn-primary">Update</button>
+    </div>
+}
+<p class="text-success">@ViewBag.StatusMessage</p>

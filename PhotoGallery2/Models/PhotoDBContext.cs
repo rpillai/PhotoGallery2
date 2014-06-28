@@ -28,5 +28,7 @@ namespace PhotoGallery2.Models
         {
             return new PhotoDBContext();
         }
+
+        //public System.Data.Entity.DbSet<PhotoGallery2.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

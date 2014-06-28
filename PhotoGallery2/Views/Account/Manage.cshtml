@@ -1,30 +1,118 @@
 ﻿@using PhotoGallery2.Models
+@model PhotoGallery2.Models.UpdateUserModel
 @{
     ViewBag.Title = "Manage Account";
 }
-<div class="row col-md-11">
-    <div class="panel panel-primary panel-collapse">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <h4>@ViewBag.Title.</h4>
+<div class="container-fluid row">
+    <div class="col-md-offset-2 col-xs-10">
+        <div class="panel panel-group panel-default">
+            <div class="panel-heading">
+                <ul class="nav nav-pills" id="myTab">
+                    <li>
+                        <a href="#profile" data-toggle="pill">Profile</a>
+                    </li>
+                    <li><a href="#changePassword" data-toggle="pill">Change Password</a></li>
+                    <li><a href="#anotherService" data-toggle="pill">Use another service</a></li>
+                </ul>
             </div>
-        </div>
-        <div class="panel-body ">
-            <div class="col-md-7">
-                @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
+            <div class="panel-body">
+                <div id="myTabContent" class="tab-content col-xs-offset-0 col-sm-offset-1">
+                    <div class="tab-pane fade in active" id="profile">
+                        @Html.Partial("_UpdateProfile")
+                    </div>
+                    <div class="tab-pane fade" id="changePassword">
+                        <p>
+                            @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
+                        </p>
+                    </div>
+                    <div class="tab-pane fade" id="anotherService">
+                        <p>
+                            <section id="externalLogins">
+                                @Html.Action("RemoveAccountList")
+                                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                            </section>
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <section id="externalLogins">
-                    @Html.Action("RemoveAccountList")
-                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-                </section>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <p class="text-success">@ViewBag.StatusMessage</p>
         </div>
     </div>
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function() {
+            $('#myTab a:first').tab('show');
+
+            $('#btnUpdateProfile').click(function(event) {
+                event.preventDefault();
+                $('#updateProfile').validate();
+
+                if ($('#updateProfile').valid()) {
+                    var headers = {};
+                    var token = $('#updateProfile input[name=__RequestVerificationToken]').val();
+                    headers["__RequestVerificationToken"] = token;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#updateProfile').attr('action'),
+                        dataType: 'Json',
+                        //contentType: 'application/json',
+                        data: {
+                            FirstName: $('#FirstName').val(),
+                            LastName: $('#LastName').val(),
+                            __RequestVerificationToken: token
+                        },
+                        headers: headers,
+                        success: function(result) {
+                            if (result === 3) {
+                                updateStatus('Profile updated successfully');
+                            }
+                        }
+                    });
+                }
+
+                event.preventDefault();
+            });
+
+
+            $('#btnChangePassword').click(function (event) {
+                event.preventDefault();
+                $('#changePasswordForm').validate();
+
+                if ($('#changePasswordForm').valid()) {
+                    var headers = {};
+                    var token = $('#changePasswordForm input[name=__RequestVerificationToken]').val();
+                    headers["__RequestVerificationToken"] = token;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#changePassword').attr('action'),
+                        dataType: 'Json',
+                        data: {
+                            OldPassword: $('#OldPassword').val(),
+                            NewPassword: $('#NewPassword').val(),
+                            ConfirmPassword: $('#ConfirmPassword').val(),
+                            __RequestVerificationToken: token
+                        },
+                        headers: headers,
+                        success: function (result) {
+                            if (result === 3) {
+                                updateStatus('Profile updated successfully');
+                            }
+                        },
+                        error: function(error) {
+                            var data = $.parseJSON(error);
+                        }
+                    });
+                }
+
+                event.preventDefault();
+            });
+        });
+
+        function updateStatus(status) {
+            $('.text-success').text(status);
+        }
+    </script>
 }

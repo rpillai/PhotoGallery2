@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using System.Web.Mail;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -151,5 +152,14 @@ namespace PhotoGallery2.Models
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
+    }
+
+    public class UpdateUserModel
+    {
+        [Required(AllowEmptyStrings = false,ErrorMessage = "Firstname is required.")]
+        public string FirstName { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Lastname is required.")]
+        public string LastName { get; set; }
     }
 }

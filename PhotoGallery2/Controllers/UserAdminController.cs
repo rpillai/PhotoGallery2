@@ -94,7 +94,6 @@ namespace PhotoGallery2.Controllers
 
                 selectedRole = selectedRole ?? new string[] {};
 
-
                 foreach (var userRole in userRoles)
                 {
                     var result = await UserManager.RemoveFromRoleAsync(user.Id, userRole);
@@ -109,6 +108,13 @@ namespace PhotoGallery2.Controllers
             }
 
             return View();
+        }
+
+
+        public async Task<ActionResult> Delete(string id)
+        {
+            var user = await UserManager.FindByIdAsync(id);
+            return View(user);
         }
         
     }

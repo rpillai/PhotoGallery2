@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
+using System.Web.Management;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
@@ -55,6 +57,8 @@ namespace PhotoGallery2.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
+
+
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
@@ -101,7 +105,8 @@ namespace PhotoGallery2.Controllers
                         UserManager.SendEmailAsync(user.Id, "Confirm your account",
                             "Please confirm your account by clicking this link: <a href=\"" + callBackUrl +
                             "\">link</a>");
-                    ViewBag.Link = callBackUrl;
+                    //ViewBag.Link = callBackUrl;
+
                     return View("DisplayEmail");
                     //await SignInAsync(user, isPersistent: false);
                     //return RedirectToAction("Index", "Home");
@@ -116,6 +121,7 @@ namespace PhotoGallery2.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
@@ -233,6 +239,7 @@ namespace PhotoGallery2.Controllers
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                : message == ManageMessageId.ProfileUpdateSuccess? "Your profile has been updated."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
             ViewBag.HasLocalPassword = HasPassword();
@@ -244,24 +251,27 @@ namespace PhotoGallery2.Controllers
         // POST: /Account/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Manage(ManageUserViewModel model)
+        public async Task<JsonResult> Manage(ManageUserViewModel model)
         {
             bool hasPassword = HasPassword();
             ViewBag.HasLocalPassword = hasPassword;
             ViewBag.ReturnUrl = Url.Action("Manage");
+
             if (hasPassword)
             {
                 if (ModelState.IsValid)
                 {
                     IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-                    }
-                    else
-                    {
-                        AddErrors(result);
-                    }
+
+                    return Json(result);
+                    //if (result.Succeeded)
+                    //{
+                    //    return Json(ManageMessageId.ChangePasswordSuccess);
+                    //}
+                    //else
+                    //{
+                    //    return Json(result);
+                    //}
                 }
             }
             else
@@ -276,19 +286,22 @@ namespace PhotoGallery2.Controllers
                 if (ModelState.IsValid)
                 {
                     IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
-                    }
-                    else
-                    {
-                        AddErrors(result);
-                    }
+
+                    return Json(result);
+
+                    //if (result.Succeeded)
+                    //{
+                    //    return Json(ManageMessageId.SetPasswordSuccess);
+                    //}
+                    //else
+                    //{
+                    //    return Json(result);
+                    //}
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return Json(null);
         }
 
         //
@@ -428,6 +441,25 @@ namespace PhotoGallery2.Controllers
             return View(context.Users.ToList());
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult UpdateProfile([Bind(Include = "FirstName, LastName")] UpdateUserModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = UserManager.FindById(User.Identity.GetUserId());
+
+                if (user != null)
+                {
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    UserManager.Update(user);    
+                }
+            }
+
+            return Json(ManageMessageId.ProfileUpdateSuccess);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && UserManager != null)
@@ -483,6 +515,7 @@ namespace PhotoGallery2.Controllers
             ChangePasswordSuccess,
             SetPasswordSuccess,
             RemoveLoginSuccess,
+            ProfileUpdateSuccess,
             Error
         }
 

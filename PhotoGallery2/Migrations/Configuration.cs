@@ -13,8 +13,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace PhotoGallery2.Migrations
 {
-
-
     internal sealed class Configuration : DbMigrationsConfiguration<PhotoDBContext>
     {
         public Configuration()
