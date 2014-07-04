@@ -18,7 +18,7 @@ namespace PhotoGallery2.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "PhotoGallery2.Models.PhotoDBContext";
+            ContextKey = "PhotoDBContext";
         }
 
         protected override void Seed(PhotoDBContext context)

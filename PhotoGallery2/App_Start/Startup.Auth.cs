@@ -5,6 +5,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using PhotoGallery2.Models;
+using PhotoGallery2.CloudService;
 
 namespace PhotoGallery2
 {
@@ -54,6 +55,7 @@ namespace PhotoGallery2
 
             app.UseGoogleAuthentication();
 
+            new PhotoStorageService().CreateAndConfigureAsync("photos");
             
         }
     }
