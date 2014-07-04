@@ -3,43 +3,57 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Mime;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.AccessControl;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Management;
 using System.Web.Mvc;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Microsoft.Ajax.Utilities;
 using Microsoft.SqlServer.Server;
+using PhotoGallery2.DAL;
 using PhotoGallery2.Models;
-
+using Image = System.Drawing.Image;
+using PhotoGallery2.CloudService;
 
 namespace PhotoGallery2.Controllers
 {
     [Authorize]
     public class PhotoController : Controller
     {
-        readonly PhotoDBContext context = new PhotoDBContext();
+        private readonly UnitOfWork unitOfWork;
+
+        public PhotoController()
+        {
+            unitOfWork = new UnitOfWork();
+        }
+
+        public PhotoController(PhotoDBContext context)
+        {
+            unitOfWork = new UnitOfWork(context);
+        }
 
         public ActionResult Index(int AlbumID)
         {
-            var thumPath = ServerConstants.PHOTO_THUMBS_ROOT;
-            var path = ServerConstants.PHOTO_ROOT;
-
             if (AlbumID != 0)
             {
-                var photos = context.Photos.Where(p => p.AlbumID == AlbumID)
-                                           .Select(x => new PhotoViewModel
-                                           {
-                                               PhotoID = x.PhotoID,
-                                               Title = x.Title,
-                                               Description = x.Description,
-                                               ThumbnailPath = thumPath + x.PhotoPath,
-                                               PhotoPath = path + x.PhotoPath
-                                           }).OrderBy(p => p.PhotoID);
+                var photos = unitOfWork.PhotoRepository.Get(filter: p => p.AlbumID == AlbumID).Select(x => new PhotoViewModel
+                                {
+                                    PhotoID = x.PhotoID,
+                                    Title = x.Title,
+                                    Description = x.Description,
+                                    ThumbnailPath = x.ThumbnailPath,
+                                    PhotoPath = x.PhotoPath
+                                });
+
                 return View(photos);
             }
 
@@ -48,79 +62,89 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Manage()
         {
-
             return View();
         }
 
         public PartialViewResult _ListPhotos()
         {
-   
             var photos = new PagedDataList<ManagePhotoModel>
             {
-                PagedEntity = context.Photos.OrderBy(x => x.PhotoID).Select(p => new ManagePhotoModel
+                PagedEntity = unitOfWork.PhotoRepository.Get().OrderBy(x => x.PhotoID).Select(p => new ManagePhotoModel
                 {
                     PhotoID = p.PhotoID,
                     Description = p.Description,
                     Title = p.Title,
-                    AlbumName = p.Album.Name
+                    AlbumName = p.Album.Name,
+                    ThumpnailPath = p.ThumbnailPath
                 }).Take(ServerConstants.PAGE_SIZE).ToList(),
 
-                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / ServerConstants.PAGE_SIZE))
+                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)unitOfWork.PhotoRepository.Get().Count() / ServerConstants.PAGE_SIZE))
             };
 
+            ViewBag.Albums = new SelectList(unitOfWork.AlbumRepository.Get(), "AlbumID", "Name");
             ViewBag.NumberOfPages = photos.NumberOfPages;
 
             return PartialView(photos);
         }
 
-
         public PartialViewResult GetNextResult(int currentPageNumber)
         {
             var photos = new PagedDataList<ManagePhotoModel>
             {
-                PagedEntity = context.Photos.OrderBy(x=> x.PhotoID).Select(p => new ManagePhotoModel
-                {
-                    PhotoID = p.PhotoID,
-                    Description = p.Description,
-                    Title = p.Title,
-                    AlbumName = p.Album.Name
-                }).Skip(ServerConstants.PAGE_SIZE * (currentPageNumber - 1)).Take(ServerConstants.PAGE_SIZE).ToList(),
+                PagedEntity = unitOfWork.PhotoRepository.Get(orderby: q => q.OrderBy(d => d.PhotoID)).Select(p => new ManagePhotoModel
+                    {
+                        PhotoID = p.PhotoID,
+                        Description = p.Description,
+                        Title = p.Title,
+                        AlbumName = p.Album.Name,
+                        ThumpnailPath = p.ThumbnailPath
+                    }).Skip(ServerConstants.PAGE_SIZE * (currentPageNumber - 1)).Take(ServerConstants.PAGE_SIZE).ToList(),
 
-                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)context.Photos.Count() / ServerConstants.PAGE_SIZE)),
+                NumberOfPages = Convert.ToInt32(Math.Ceiling((double)unitOfWork.PhotoRepository.Get().Count() / ServerConstants.PAGE_SIZE)),
                 CurrentPage = currentPageNumber
             };
             ViewBag.NumberOfPages = photos.NumberOfPages;
             return PartialView("_ListPhotos", photos);
         }
 
-
-
         [HttpPost]
-        public void DeletePhotos(List<int> photoIDList)
+        public async Task<bool> DeletePhotos(List<int> photoIDList)
         {
-            if(photoIDList.Count == 0) return;
+            bool returnValue;
 
-            foreach (var i in photoIDList)
+            if (photoIDList.Count == 0) return false;
+
+            try
             {
-                var photo = context.Photos.Find(i);
+                var photoService = new PhotoStorageService();
 
-                if (photo == null) continue;
+                var photos = unitOfWork.PhotoRepository.Get().Where( x => photoIDList.Contains(x.PhotoID)).ToList();
 
-                context.Photos.Remove(photo);
+                unitOfWork.PhotoRepository.DeleteByList(photos);
 
-                deletePhotoFile(photo.PhotoPath);
+                returnValue = await photoService.DeletePhotos(photos);
+                 
+                unitOfWork.Save();
             }
-            context.SaveChanges();
+            catch (Exception ex)
+            {
+                throw new HttpRequestException(ex.Message);
+            }
 
+            return returnValue;
         }
-
 
         public ActionResult Details(int? photoID)
         {
             ViewBag.PhotoID = photoID;
-            var photo = context.Photos.Find(photoID);
-            photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
-            return View(photo);
+
+            if (photoID.HasValue)
+            {
+                var photo = unitOfWork.PhotoRepository.GetByID(photoID);
+                return View(photo);
+            }
+            return View();
+
         }
 
         public PartialViewResult _GetDetailsView(Photo photo)
@@ -135,8 +159,7 @@ namespace PhotoGallery2.Controllers
         /// <returns></returns>
         public ActionResult Edit(int photoID)
         {
-
-            var photo = context.Photos.Find(photoID);
+            var photo = unitOfWork.PhotoRepository.Get(filter: w => w.PhotoID == photoID).FirstOrDefault();
 
             if (photo != null)
             {
@@ -148,24 +171,25 @@ namespace PhotoGallery2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Photo photo)
+        public ActionResult Edit([Bind(Include = "PhotoID, Title,Description")] Photo photo)
         {
             if (ModelState.IsValid)
             {
-                var p = context.Photos.Find(photo.PhotoID);
+                var p = unitOfWork.PhotoRepository.GetByID(photo.PhotoID);
 
                 p.Title = photo.Title;
                 p.Description = photo.Description;
 
-                //context.Entry(p).State = EntityState.Modified;
-                context.SaveChanges();
             }
+
+            unitOfWork.Save();
 
             return RedirectToAction("Manage");
         }
 
         public ActionResult Upload(int? albumID)
         {
+            var context = new PhotoDBContext();
 
             ViewBag.Albums = new SelectList(context.Albums.ToList(), "AlbumID", "Name", albumID);
             return View();
@@ -174,12 +198,9 @@ namespace PhotoGallery2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken()]
         [Authorize(Roles = "Administrator")]
-        public ActionResult Upload(FormCollection formData)
+        public async Task<ActionResult> Upload(FormCollection formData)
         {
-            var albumDirectory = Server.MapPath(ServerConstants.PHOTO_ROOT);
             var albumID = Convert.ToInt32(formData["Albums"]);
-
-            albumDirectory += albumID + "\\";
 
             for (var i = 0; i < Request.Files.Count; i++)
             {
@@ -191,41 +212,29 @@ namespace PhotoGallery2.Controllers
                     {
                         AlbumID = albumID,
                         Description = formData["Description"],
-                        ContentType = fileBase.ContentType,
-                        FileName = fileBase.FileName,
-                        ContentLength = fileBase.ContentLength,
-                        PhotoPath = albumID + "//" + fileBase.FileName
+                        ContentType = fileBase.ContentType
                     };
 
-                    saveAndCreateThumbnail(albumDirectory, albumID, fileBase);
+                    var photoService = new PhotoStorageService();
 
-                    context.Photos.Add(photo);
-                    context.SaveChanges();
+                    await photoService.UploadPhotoAsync(photo, fileBase);
+
+                    unitOfWork.PhotoRepository.Insert(photo);
+                    unitOfWork.Save();
                 }
             }
-
             return RedirectToAction("Index", new { AlbumID = albumID });
-
         }
 
         public JsonResult GetPhotosForSlideShow(int albumID)
         {
-            var path = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT);
-            var thumPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_THUMBS_ROOT);
-
-            var photos = context.Photos.Where(p => p.AlbumID == albumID)
-                                           .Select(x => new
+            var photos = unitOfWork.PhotoRepository.Get(filter: q => q.AlbumID == albumID).Select(x => new
                                            {
                                                title = x.Title,
-                                               href = path + x.PhotoPath,
-                                               thumbnail = thumPath + x.PhotoPath,
+                                               href = x.PhotoPath,
+                                               thumbnail = x.ThumbnailPath,
                                                type = x.ContentType
                                            });
-
-            foreach (var p in photos)
-            {
-                Console.WriteLine(p.thumbnail + "     " + p.href);
-            }
 
             return Json(photos, "data", JsonRequestBehavior.AllowGet);
         }
@@ -237,77 +246,67 @@ namespace PhotoGallery2.Controllers
             if (flag == "N")
             {
                 photo =
-                    context.Photos.AsEnumerable().OrderBy(p => p.PhotoID)
-                        .Where(p => p.AlbumID == albumID && p.PhotoID > photoID).Take(1).FirstOrDefault();
-
-                if (photo == null)
-                    photo = context.Photos.Where(p => p.AlbumID == albumID).OrderBy(p => p.PhotoID).First();
+                    unitOfWork.PhotoRepository.Get(filter: w => w.AlbumID == albumID && w.PhotoID > photoID,
+                        @orderby: o => o.OrderBy(q => q.PhotoID)).FirstOrDefault() ??
+                    unitOfWork.PhotoRepository.Get(filter: w => w.AlbumID == albumID,
+                            @orderby: o => o.OrderBy(q => q.PhotoID)).First();
             }
             else
             {
-                photo =
-                    context.Photos.AsEnumerable().OrderByDescending(p => p.PhotoID)
-                        .Where(p => p.AlbumID == albumID && p.PhotoID < photoID).Take(1).FirstOrDefault();
-
-                if (photo == null)
-                    photo = context.Photos.Where(p => p.AlbumID == albumID).OrderByDescending(p => p.PhotoID).First();
+                photo = unitOfWork.PhotoRepository.Get(@orderby: o => o.OrderByDescending(p => p.PhotoID),
+                    filter: w => w.AlbumID == albumID && w.PhotoID < photoID).Take(1).FirstOrDefault() ??
+                        unitOfWork.PhotoRepository.Get(filter: p => p.AlbumID == albumID,
+                        @orderby: o => o.OrderByDescending(p => p.PhotoID)).First();
             }
-
-            photo.PhotoPath = VirtualPathUtility.ToAbsolute(ServerConstants.PHOTO_ROOT + "//" + photo.PhotoPath);
 
             var photoData = new PhotoViewModel
             {
-                PhotoID =  photo.PhotoID,
+                PhotoID = photo.PhotoID,
                 Description = photo.Description,
-                PhotoPath =  photo.PhotoPath,
-                Title =  photo.Title
+                PhotoPath = photo.PhotoPath,
+                Title = photo.Title
             };
 
             return Json(photoData, "PhotoData", JsonRequestBehavior.AllowGet);
         }
 
-        private void saveAndCreateThumbnail(string albumDirectory, int albumID, HttpPostedFileBase fileBase)
+        [HttpPost]
+        public void MovePhotos(List<int> selectedPhotos, int albumID)
         {
-            var albumThumbnailDirectory = Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT) + albumID + "\\";
-
-            if (checkAndCreateDirectory(albumDirectory))
+            foreach (var selectedPhoto in selectedPhotos)
             {
-               fileBase.SaveAs(albumDirectory + "\\" + Path.GetFileName(fileBase.FileName));
-            }
-            if (checkAndCreateDirectory(albumThumbnailDirectory))
-            {
-                
-                var bitMap = Image.FromFile(albumDirectory + "\\" + Path.GetFileName(fileBase.FileName));
+                var photo = unitOfWork.PhotoRepository.GetByID(selectedPhoto);
 
-                var thumbnail = bitMap.GetThumbnailImage(160, 160, null, IntPtr.Zero);
-
-                thumbnail.Save(albumThumbnailDirectory + Path.GetFileName(fileBase.FileName));
-
-                bitMap.Dispose();
-            }
-        }
-
-        private bool checkAndCreateDirectory(string directoryName)
-        {
-            var dirInfo = new DirectoryInfo(directoryName);
-
-            var created = dirInfo.Exists;
-
-            if (created == false)
-            {
-                try
+                if (photo != null)
                 {
-                    dirInfo.Create();
-                    created = true;
-                }
-                catch (Exception)
-                {
+                    photo.AlbumID = albumID;
+
+                    movePhotoToNewAlbum(photo.PhotoPath, albumID);
+
+                    photo.PhotoPath = albumID + "//" + photo.FileName;
+                    unitOfWork.PhotoRepository.Update(photo);
                 }
             }
 
-            return created;
+            unitOfWork.Save();
+
         }
 
+        private void movePhotoToNewAlbum(string currentPath, int newAlbumID)
+        {
+            //var getPhotoFileName = Path.GetFileName(currentPath);
+
+            //var currentDirectory = ServerConstants.PHOTO_ROOT + currentPath;
+            //var newDirectory = ServerConstants.PHOTO_ROOT + newAlbumID;
+
+            
+
+            //currentDirectory = ServerConstants.PHOTO_THUMBS_ROOT + currentPath;
+            //newDirectory = ServerConstants.PHOTO_THUMBS_ROOT + newAlbumID;
+
+            //movePhotoAndThumbnailFile(newDirectory, currentDirectory, getPhotoFileName);
+        }
+        
 
         private void deletePhotoFile(string filePath)
         {
@@ -325,9 +324,7 @@ namespace PhotoGallery2.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-                context.Dispose();
-
+            unitOfWork.Dispose();
             base.Dispose(disposing);
         }
     }

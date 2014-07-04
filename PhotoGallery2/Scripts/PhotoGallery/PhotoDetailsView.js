@@ -36,14 +36,14 @@
             $('#detailsView img').attr('src', result['PhotoPath']);
             $('#detailsView h4').text(result['Title']);
             $('#detailsView p').text(result['Description']);
-            $('#PhotoID').attr('value',result['PhotoID']);
+            $('#PhotoID').attr('value', result['PhotoID']);
+
             loadCommentData(result['PhotoID']);
         });
     };
 
     function loadCommentData(photoId) {
-        $('#EntityList').load(
-                $('#CommentListUrl').val(),
+        $('#EntityList').load($('#CommentListUrl').val(),
                               { 'PhotoID': photoId }, function () {
                               });
     }

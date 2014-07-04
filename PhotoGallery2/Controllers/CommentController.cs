@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PhotoGallery2.DAL;
 using PhotoGallery2.Models;
 using System.Web.Security.AntiXss;
 
@@ -12,16 +14,28 @@ namespace PhotoGallery2.Controllers
 {
     public class CommentController : Controller
     {
-        private readonly PhotoDBContext context = new PhotoDBContext();
+        private readonly UnitOfWork unitOfWork;
+
+        public CommentController()
+        {
+            unitOfWork = new UnitOfWork();
+        }
+
+        public CommentController(PhotoDBContext context)
+        {
+            unitOfWork = new UnitOfWork(context);
+        }
+
 
         public ActionResult Index(int photoID)
         {
-            return View(context.Photos.Find(photoID).Comments.ToList());
+            var comments = unitOfWork.CommentRepository.Get().Where(c => c.PhotoID == photoID);
+            return View(comments.ToList());
         }
 
         public PartialViewResult ListComments(int PhotoID)
         {
-            var comments = context.Comments.Where(c => c.PhotoID == PhotoID).ToList();
+            var comments = unitOfWork.CommentRepository.Get().Where(c => c.PhotoID == PhotoID).ToList();
             return PartialView("_CommentListPartial", comments);
         }
 
@@ -44,16 +58,15 @@ namespace PhotoGallery2.Controllers
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                     string userID = HttpContext.User.Identity.GetUserId();
 
-                    context.Comments.Add(new Comment
+                    unitOfWork.CommentRepository.Insert(new Comment
                     {
                         Description = AntiXssEncoder.HtmlEncode(Server.HtmlEncode(Description), false),
                         PhotoID = PhotoID,
                         UserID = userID,
                     });
-                    context.SaveChanges();
+                    unitOfWork.Save();
                 }
             }
         }
@@ -63,20 +76,18 @@ namespace PhotoGallery2.Controllers
         {
             if (checkedID == null) return;
 
-            foreach (var i in checkedID)
-            {
-                var comment = context.Comments.Find(i);
-                context.Comments.Remove(comment);
-            }
-            context.SaveChanges();
+            var comments = unitOfWork.CommentRepository.Get().Where(c => checkedID.Contains(c.CommentID)).ToList();
+
+            unitOfWork.CommentRepository.DeleteByList(comments);
+            unitOfWork.Save();
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                if (context != null)
-                    context.Dispose();
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }

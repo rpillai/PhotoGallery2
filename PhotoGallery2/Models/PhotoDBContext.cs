@@ -8,6 +8,7 @@ using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using PhotoGallery2.Migrations;
 
 namespace PhotoGallery2.Models
 {
@@ -29,6 +30,10 @@ namespace PhotoGallery2.Models
             return new PhotoDBContext();
         }
 
-        //public System.Data.Entity.DbSet<PhotoGallery2.Models.ApplicationUser> ApplicationUsers { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        }
     }
 }

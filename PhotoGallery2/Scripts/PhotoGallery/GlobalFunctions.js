@@ -1,8 +1,9 @@
 ﻿$(function () {
-
     $('#btnDelete').click(function (e) {
         e.preventDefault();
+
         var selected = new Array();
+
         $("input[id='chkDeleteID'][type='checkbox']:checked").each(function () {
             selected.push($(this).val());
         });
@@ -35,19 +36,26 @@
         });
     });
 
-});
+    function GetSelectedID(checkboxName) {
+        var selected = [];
+        $("input[id='" + checkboxName + "'][type='checkbox']:checked").each(function () {
+            selected.push($(this).val());
+        });
+        return selected;
+    }
 
-function callDeleteAjax(selected) {
-    $.ajax({
-        type: 'POST',
-        data: JSON.stringify(selected),
-        url: $('#DeleteUrl').val(),
-        contentType: 'application/json',
-        success: function (result) {
-            //code to reload the lists again.
-            $('#EntityList').load({
+    function callDeleteAjax(selected) {
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(selected),
+            url: $('#DeleteUrl').val(),
+            contentType: 'application/json',
+            success: function (result) {
+                //code to reload the lists again.
+                $('#EntityList').load($('#ReloadUrl'));
+            }
+        });
+    }
+})();
 
-            });
-        }
-    });
-}
+

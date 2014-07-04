@@ -17,6 +17,7 @@ namespace PhotoGallery2.Models
         public int CommentID { get; set; }
         public string Description { get; set; }
         public int PhotoID { get; set; }
+        [Required]
         public string UserID { get; set; }
 
         public virtual ApplicationUser User { get; set; }

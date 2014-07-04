@@ -8,7 +8,7 @@ namespace PhotoGallery2.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Albums",
+                "dbo.Album",
                 c => new
                     {
                         AlbumID = c.Int(nullable: false, identity: true),
@@ -21,7 +21,7 @@ namespace PhotoGallery2.Migrations
                 .PrimaryKey(t => t.AlbumID);
             
             CreateTable(
-                "dbo.Photos",
+                "dbo.Photo",
                 c => new
                     {
                         PhotoID = c.Int(nullable: false, identity: true),
@@ -30,26 +30,26 @@ namespace PhotoGallery2.Migrations
                         Description = c.String(),
                         Place = c.String(),
                         PhotoPath = c.String(),
+                        ThumbnailPath = c.String(),
                         ContentType = c.String(),
-                        ContentLength = c.Int(nullable: false),
                         AlbumID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.PhotoID)
-                .ForeignKey("dbo.Albums", t => t.AlbumID, cascadeDelete: true)
+                .ForeignKey("dbo.Album", t => t.AlbumID, cascadeDelete: true)
                 .Index(t => t.AlbumID);
             
             CreateTable(
-                "dbo.Comments",
+                "dbo.Comment",
                 c => new
                     {
                         CommentID = c.Int(nullable: false, identity: true),
                         Description = c.String(),
                         PhotoID = c.Int(nullable: false),
-                        UserID = c.String(maxLength: 128, nullable:false),
+                        UserID = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.CommentID)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserID, cascadeDelete:true)
-                .ForeignKey("dbo.Photos", t => t.PhotoID, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserID, cascadeDelete: true)
+                .ForeignKey("dbo.Photo", t => t.PhotoID, cascadeDelete: true)
                 .Index(t => t.PhotoID)
                 .Index(t => t.UserID);
             
@@ -128,29 +128,29 @@ namespace PhotoGallery2.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Photos", "AlbumID", "dbo.Albums");
-            DropForeignKey("dbo.Comments", "PhotoID", "dbo.Photos");
-            DropForeignKey("dbo.Comments", "UserID", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Comment", "PhotoID", "dbo.Photo");
+            DropForeignKey("dbo.Comment", "UserID", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Photo", "AlbumID", "dbo.Album");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Comments", new[] { "UserID" });
-            DropIndex("dbo.Comments", new[] { "PhotoID" });
-            DropIndex("dbo.Photos", new[] { "AlbumID" });
+            DropIndex("dbo.Comment", new[] { "UserID" });
+            DropIndex("dbo.Comment", new[] { "PhotoID" });
+            DropIndex("dbo.Photo", new[] { "AlbumID" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.Comments");
-            DropTable("dbo.Photos");
-            DropTable("dbo.Albums");
+            DropTable("dbo.Comment");
+            DropTable("dbo.Photo");
+            DropTable("dbo.Album");
         }
     }
 }

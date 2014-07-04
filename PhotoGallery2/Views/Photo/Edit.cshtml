@@ -15,7 +15,10 @@
         <div class="panel-body">
             @Html.ValidationSummary(true)
             @Html.HiddenFor(model => model.PhotoID)
-
+            <div class="col-md-offset-2">
+                <img class="img-thumbnail img-responsive img-rounded" src="@Model.ThumbnailPath" title="@Model.Title" alt="@Model.Title" />
+            </div>
+            <br />
             <div class="form-group">
                 @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
 
@@ -29,7 +32,7 @@
                 @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
 
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Description)
+                    @Html.TextAreaFor(model => model.Description)
                     @Html.ValidationMessageFor(model => model.Description)
                 </div>
             </div>
@@ -49,14 +52,6 @@
                     @Html.HiddenFor(model => model.AlbumID)
                 </div>
             </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.PhotoPath, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DisplayFor(model => model.PhotoPath)
-                </div>
-            </div>
-
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-default" />
@@ -70,5 +65,5 @@
     @Html.ActionLink("Back to List", "Manage")
 </div>
 @section Scripts{
-@Scripts.Render("~/Bundles/jqueryval")
+    @Scripts.Render("~/Bundles/jqueryval")
 }

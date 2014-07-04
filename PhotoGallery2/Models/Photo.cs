@@ -23,10 +23,10 @@ namespace PhotoGallery2.Models
         
         public string Place { get; set; }
         public string PhotoPath { get; set; }
+        public string ThumbnailPath { get; set; }
 
         public string ContentType { get; set; }
-        public int ContentLength { get; set; }
-
+        
         public int AlbumID { get; set; }
 
         public virtual Album Album { get; set; }
@@ -39,5 +39,6 @@ namespace PhotoGallery2.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string AlbumName { get; set; }
+        public string ThumpnailPath { get; set; }
     }
 }

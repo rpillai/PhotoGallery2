@@ -58,7 +58,6 @@ namespace PhotoGallery2.Controllers
             {
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
 
-
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);

@@ -3,7 +3,7 @@
     ViewBag.Title = "Manage Photo";
 }
 <div class="panel panel-primary">
-    <div class="panel panel-heading">
+    <div class="panel panel-heading" style="margin-bottom: 0px">
         <h2 class="panel-title">List of Photos</h2>        
     </div>
     <div id="EntityList" class="panel-body">
@@ -16,6 +16,10 @@
             <span class="glyphicon glyphicon-trash"></span>
             Delete
         </button>
+        <button class="btn btn-primary" type="button" id="btnShowMoveDialog">
+            <span class="glyphicon glyphicon-arrow-right"></span>
+            Move
+        </button>
     </div>
 </div>
 
@@ -26,4 +30,5 @@
 @section scripts
 {
     <script type="text/javascript" src="~/Scripts/PhotoGallery/GlobalFunctions.js"></script> 
+<script type="text/javascript" src="~/Scripts/PhotoGallery/PhotoManage.js"></script> 
 }

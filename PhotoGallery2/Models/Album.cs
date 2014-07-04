@@ -27,7 +27,7 @@ namespace PhotoGallery2.Models
 
         [DataType(DataType.Date)]
         [DisplayName("Date Created")]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Created date cannot be empty")]
         public DateTime CreateDate { get; set; }
 

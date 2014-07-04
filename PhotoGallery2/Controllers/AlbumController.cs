@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
+using PhotoGallery2.DAL;
 using PhotoGallery2.Models;
 using WebGrease.Css.Extensions;
 
@@ -15,12 +17,24 @@ namespace PhotoGallery2.Controllers
     [Authorize]
     public class AlbumController : Controller
     {
-        private readonly PhotoDBContext db = new PhotoDBContext();
+        private readonly UnitOfWork unitOfWork;
+
+        public AlbumController()
+        {
+            unitOfWork = new UnitOfWork(new PhotoDBContext());
+        }
+
+
+        public AlbumController(PhotoDBContext context)
+        {
+            unitOfWork = new UnitOfWork(context);
+        }
+
 
         [Authorize]
         public ActionResult Index()
         {
-            var albums = db.Albums.Where( a=> a.Photos.Count > 0) ;
+            var albums = unitOfWork.AlbumRepository.Get(filter: a => a.Photos.Count > 0);
 
             IEnumerable<AlbumViewModel> model = albums.Select(album => new AlbumViewModel
             {
@@ -28,7 +42,7 @@ namespace PhotoGallery2.Controllers
                 AlbumName = album.Name,
                 Description = album.Description,
                 PhotoCount = album.Photos.Count,
-                KeythumbnailPath = album.Photos.FirstOrDefault() != null ? ServerConstants.PHOTO_THUMBS_ROOT + album.Photos.FirstOrDefault().PhotoPath
+                KeythumbnailPath = album.Photos.FirstOrDefault() != null ? album.Photos.FirstOrDefault().ThumbnailPath
                                                                     : "holder.js?160x160",
                 DateTaken = album.CreateDate
 
@@ -39,7 +53,7 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Manage()
         {
-            var albums = db.Albums.ToList();
+            var albums =  unitOfWork.AlbumRepository.Get();
             return View(albums);
         }
 
@@ -50,7 +64,9 @@ namespace PhotoGallery2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+            
+            var album = unitOfWork.AlbumRepository.GetByID(id);
+
             if (album == null)
             {
                 return HttpNotFound();
@@ -61,7 +77,11 @@ namespace PhotoGallery2.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            var album = new Album
+            {
+                CreateDate =  DateTime.Now
+            };
+            return View(album);
         }
 
         // POST: /Album/Create
@@ -73,8 +93,8 @@ namespace PhotoGallery2.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Albums.Add(album);
-                db.SaveChanges();
+                unitOfWork.AlbumRepository.Insert(album);
+                unitOfWork.Save();
                 return RedirectToAction("Manage");
             }
 
@@ -88,7 +108,9 @@ namespace PhotoGallery2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+
+            var album = unitOfWork.AlbumRepository.GetByID(id);
+
             if (album == null)
             {
                 return HttpNotFound();
@@ -105,8 +127,8 @@ namespace PhotoGallery2.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(album).State = EntityState.Modified;
-                db.SaveChanges();
+                unitOfWork.AlbumRepository.Update(album);
+                unitOfWork.Save();
                 return RedirectToAction("Index");
             }
             return View(album);
@@ -119,7 +141,9 @@ namespace PhotoGallery2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+
+            var album = unitOfWork.AlbumRepository.GetByID(id);
+
             if (album == null)
             {
                 return HttpNotFound();
@@ -132,16 +156,15 @@ namespace PhotoGallery2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var album = db.Albums.Find(id);
+            unitOfWork.AlbumRepository.Delete(id);
 
             deleteAlbumDirectory(Server.MapPath(ServerConstants.PHOTO_ROOT + "/" + id));
 
             deleteAlbumDirectory(Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT + "/" + id));
             
-            db.Albums.Remove(album);
-            db.SaveChanges();
+            unitOfWork.Save();
 
-            return RedirectToAction("ListAlbums");
+            return RedirectToAction("Manage");
         }
 
         private void deleteAlbumDirectory(string albumPath)
@@ -155,7 +178,7 @@ namespace PhotoGallery2.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                unitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }
