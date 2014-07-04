@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using PhotoGallery2.Migrations;
 using PhotoGallery2.Models;
 
 namespace PhotoGallery2
@@ -18,6 +19,8 @@ namespace PhotoGallery2
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            Database.SetInitializer<PhotoDBContext>(new MigrateDatabaseToLatestVersion<PhotoDBContext, Configuration>());
         }
     }
 }
