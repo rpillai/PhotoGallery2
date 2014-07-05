@@ -32,11 +32,9 @@ namespace PhotoGallery2.CloudService
 
                 StorageCredentials credentials = new StorageCredentials(account, key);
 
-                return new CloudStorageAccount(credentials, true);
+                return new CloudStorageAccount(credentials, false);
 
-                //string connectionString = string.Format("DefautlEndPointProtocol={2};AccountName={0};AccountKey={1}","https://rpillai.blob.core.windows.net/", account, key);
-
-                //connectionString = "UseDevelopmentStorage=true";
+                //var connectionString = "UseDevelopmentStorage=true";
 
                 //return CloudStorageAccount.Parse(connectionString);
             }
@@ -76,9 +74,11 @@ namespace PhotoGallery2.CloudService
 
             await blockBlob.UploadFromStreamAsync(fileToUpload.InputStream);
 
-            var uriBuilder = new UriBuilder(schemeName: "http", hostName: blockBlob.Uri.Host)
+            blockBlob.StorageUri.ToString();
+
+            var uriBuilder = new UriBuilder(blockBlob.Uri)
             {
-                Path = blockBlob.Uri.PathAndQuery
+                Scheme = "http"
             };
 
             photo.FileName = fileName;
@@ -105,9 +105,9 @@ namespace PhotoGallery2.CloudService
 
             await blockBlob.UploadFromByteArrayAsync(byteArray, 0, byteArray.Length);
 
-            uriBuilder = new UriBuilder(schemeName: "http", hostName: blockBlob.Uri.Host)
+            uriBuilder = new UriBuilder(blockBlob.Uri)
             {
-                Path = blockBlob.Uri.PathAndQuery
+                Scheme = "http"
             };
 
             await memory.FlushAsync();

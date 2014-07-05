@@ -52,10 +52,12 @@
             contentType: 'application/json',
             success: function (result) {
                 //code to reload the lists again.
-                $('#EntityList').load($('#ReloadUrl'));
+                $('#EntityList').load($('#ReloadUrl').val());
             }
         });
     }
-})();
+
+    console.log("I am executed....")
+});
 
 

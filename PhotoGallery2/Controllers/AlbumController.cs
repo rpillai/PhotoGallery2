@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using PhotoGallery2.CloudService;
 using PhotoGallery2.DAL;
 using PhotoGallery2.Models;
 using WebGrease.Css.Extensions;
@@ -156,22 +157,13 @@ namespace PhotoGallery2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            new PhotoStorageService().DeletePhotos(unitOfWork.AlbumRepository.GetByID(id).Photos.ToList());
+
             unitOfWork.AlbumRepository.Delete(id);
-
-            deleteAlbumDirectory(Server.MapPath(ServerConstants.PHOTO_ROOT + "/" + id));
-
-            deleteAlbumDirectory(Server.MapPath(ServerConstants.PHOTO_THUMBS_ROOT + "/" + id));
-            
+   
             unitOfWork.Save();
 
             return RedirectToAction("Manage");
-        }
-
-        private void deleteAlbumDirectory(string albumPath)
-        {
-            var dirInfo = new DirectoryInfo(albumPath);
-            if (dirInfo.Exists)
-                dirInfo.Delete(true);
         }
 
         protected override void Dispose(bool disposing)
